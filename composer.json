@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "JayaCode\\Framework\\": "tests"
+            "JayaCode\\Framework\\Tests\\": "tests"
         }
     },
     "scripts": {
