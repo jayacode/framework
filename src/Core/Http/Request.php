@@ -5,6 +5,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request
 {
     /**
      * Return IP address client
+     *
      * @return string
      */
     public function ip()
@@ -14,6 +15,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request
 
     /**
      * Return IP address client
+     *
      * @return array
      */
     public function ipAll()
