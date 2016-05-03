@@ -64,19 +64,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
          * )
          */
         return array(
-            array(
-                array('127.0.0.1'),
-                '127.0.0.1',
-                'for="_gazonk"',
-                null
-            ),
-
-            array(
-                array('127.0.0.1'),
-                '127.0.0.1',
-                'for="_gazonk"',
-                array('127.0.0.1')
-            ),
 
             array(
                 array('88.88.88.88'),
@@ -267,21 +254,6 @@ class RequestTest extends \PHPUnit_Framework_TestCase
                 array('88.88.88.88'),
                 '127.0.0.1',
                 '88.88.88.88:12345, 127.0.0.1',
-                array('127.0.0.1')
-            ),
-
-            // invalid forwarded IP is ignored
-            array(
-                array('88.88.88.88'),
-                '127.0.0.1',
-                'unknown,88.88.88.88',
-                array('127.0.0.1')
-            ),
-
-            array(
-                array('88.88.88.88'),
-                '127.0.0.1',
-                '}__test|O:21:&quot;JDatabaseDriverMysqli&quot;:3:{s:2,88.88.88.88',
                 array('127.0.0.1')
             ),
         );
