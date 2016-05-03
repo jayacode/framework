@@ -2,6 +2,7 @@
 namespace JayaCode\Framework\Core\Controller;
 
 use JayaCode\Framework\Core\Http\Response;
+use JayaCode\Framework\Core\View\View;
 use Symfony\Component\HttpFoundation\Request;
 
 class Controller
@@ -16,6 +17,10 @@ class Controller
      */
     protected $response;
 
+    /**
+     * @var View
+     */
+    protected $view;
     /**
      * Controller constructor.
      * @param Request $request
@@ -34,6 +39,8 @@ class Controller
     {
         $this->request = $request;
         $this->response = $response;
+
+        $this->view = new View();
     }
 
     /**
