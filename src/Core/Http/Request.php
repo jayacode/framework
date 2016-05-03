@@ -1,7 +1,9 @@
 <?php
 namespace JayaCode\Framework\Core\Http;
 
-class Request extends \Symfony\Component\HttpFoundation\Request
+use Symfony\Component\HttpFoundation\Request as BaseRequest;
+
+class Request extends BaseRequest
 {
 
     /**
@@ -14,7 +16,7 @@ class Request extends \Symfony\Component\HttpFoundation\Request
         $pattern = trim($this->getPathInfo(), '/');
         return $pattern == '' ? '/' : $pattern;
     }
-    
+
     /**
      * Get the request method.
      *
