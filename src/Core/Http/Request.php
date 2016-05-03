@@ -92,7 +92,7 @@ class Request extends BaseRequest
         $cookies = $baseRequest->cookies->all();
         $files = $baseRequest->files->all();
         $server = $baseRequest->server->all();
-        $content = $baseRequest->content->all();
+        $content = $baseRequest->getContent();
 
         return new static($query, $request, $attributes, $cookies, $files, $server, $content);
     }
