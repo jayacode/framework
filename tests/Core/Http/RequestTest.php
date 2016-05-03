@@ -5,6 +5,26 @@ use JayaCode\Framework\Core\Http\Request;
 
 class RequestTest extends \PHPUnit_Framework_TestCase
 {
+    public function testHasRefererURL()
+    {
+        $request = new Request();
+
+        $this->assertFalse($request->hasRefererURL());
+
+        $request->initialize([], [], [], [], [], ['HTTP_REFERER' => 'http://test.com']);
+        $this->assertTrue($request->hasRefererURL());
+    }
+
+    public function testGetRefererURL()
+    {
+        $request = new Request();
+
+        $this->assertNull($request->getRefererURL());
+
+        $request->initialize([], [], [], [], [], ['HTTP_REFERER' => 'http://test.com']);
+        $this->assertEquals('http://test.com', $request->getRefererURL());
+    }
+
     /**
      * @dataProvider testGetIpAllProvider
      * @param $expected
