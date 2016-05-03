@@ -19,4 +19,16 @@ class Response extends BaseResponse
 
         return parent::setContent($content);
     }
+
+    /**
+     * @param mixed $content The response content, see setContent()
+     * @param int   $status  The response status code
+     * @param array $headers An array of response headers
+     *
+     * @return Response
+     */
+    public static function create($content = '', $status = 200, $headers = array())
+    {
+        return new static($content, $status, $headers);
+    }
 }
