@@ -48,7 +48,7 @@ class Application
      */
     public function initialize()
     {
-        $this->request = Request::createFromGlobals();
+        $this->request = Request::createFromSymfonyGlobal();
         $this->response = Response::create();
         $this->router = Router::create($this->request, $this->response);
 

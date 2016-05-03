@@ -78,77 +78,22 @@ class Request extends BaseRequest
     }
 
     /**
-     * @param array $query
-     * @param array $request
-     * @param array $attributes
-     * @param array $cookies
-     * @param array $files
-     * @param array $server
-     * @param null $content
-     * @return array|mixed|static
-     */
-    private static function createRequestFromFactory(
-        array $query = array(),
-        array $request = array(),
-        array $attributes = array(),
-        array $cookies = array(),
-        array $files = array(),
-        array $server = array(),
-        $content = null
-    ) {
-    
-        if (self::$requestFactory) {
-            $request = call_user_func(
-                self::$requestFactory,
-                $query,
-                $request,
-                $attributes,
-                $cookies,
-                $files,
-                $server,
-                $content
-            );
-
-            if (!$request instanceof self) {
-                $message = 'The Request factory must return an instance of Symfony\Component\HttpFoundation\Request.';
-                throw new \LogicException($message);
-            }
-
-            return $request;
-        }
-
-        return new static($query, $request, $attributes, $cookies, $files, $server, $content);
-    }
-
-    /**
      * Creates a new request with values from PHP's super globals.
      *
      * @return Request A new request
      */
-    public static function createFromGlobals()
+    public static function createFromSymfonyGlobal()
     {
-        // With the php's bug #66606, the php's built-in web server
-        // stores the Content-Type and Content-Length header values in
-        // HTTP_CONTENT_TYPE and HTTP_CONTENT_LENGTH fields.
-        $server = $_SERVER;
-        if ('cli-server' === PHP_SAPI) {
-            if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
-                $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];
-            }
-            if (array_key_exists('HTTP_CONTENT_TYPE', $_SERVER)) {
-                $server['CONTENT_TYPE'] = $_SERVER['HTTP_CONTENT_TYPE'];
-            }
-        }
+        $baseRequest = BaseRequest::createFromGlobals();
 
-        $request = self::createRequestFromFactory($_GET, $_POST, array(), $_COOKIE, $_FILES, $server);
+        $query = $baseRequest->query->all();
+        $request = $baseRequest->request->all();
+        $attributes = array();
+        $cookies = $baseRequest->cookies->all();
+        $files = $baseRequest->files->all();
+        $server = $baseRequest->server->all();
+        $content = $baseRequest->content->all();
 
-        if (0 === strpos($request->headers->get('CONTENT_TYPE'), 'application/x-www-form-urlencoded')
-            && in_array(strtoupper($request->server->get('REQUEST_METHOD', 'GET')), array('PUT', 'DELETE', 'PATCH'))
-        ) {
-            parse_str($request->getContent(), $data);
-            $request->request = new ParameterBag($data);
-        }
-
-        return $request;
+        return new static($query, $request, $attributes, $cookies, $files, $server, $content);
     }
 }
