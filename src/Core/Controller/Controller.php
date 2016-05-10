@@ -6,6 +6,7 @@ use JayaCode\Framework\Core\Http\Response;
 use Mustache_Autoloader;
 use Mustache_Engine;
 use Mustache_Loader_FilesystemLoader;
+use Mustache_Logger_StreamLogger;
 
 class Controller
 {
@@ -39,18 +40,20 @@ class Controller
      */
     public function initialize(Request $request = null, Response $response = null)
     {
+        $view_dir = defined("__APP_DIR__") ? __APP_DIR__.'/resource/views' : '/';
+
         $this->request = $request;
         $this->response = $response;
 
         Mustache_Autoloader::register();
 
-        $this->view = new Mustache_Engine(array(
+        $config_mustache = array(
             'template_class_prefix' => '__MyTemplates_',
             'cache' => dirname(__FILE__).'/tmp/cache/mustache',
             'cache_file_mode' => 0666, // Please, configure your umask instead of doing this :)
             'cache_lambda_templates' => true,
-            'loader' => new Mustache_Loader_FilesystemLoader(__APP_DIR__.'/resource/views'),
-            'partials_loader' => new Mustache_Loader_FilesystemLoader(__APP_DIR__.'/resource/views/partials'),
+            'loader' => new Mustache_Loader_FilesystemLoader($view_dir),
+            'partials_loader' => new Mustache_Loader_FilesystemLoader($view_dir),
             'helpers' => array('i18n' => function ($text) {
                 // do something translatey here...
             }),
@@ -61,7 +64,9 @@ class Controller
             'logger' => new Mustache_Logger_StreamLogger('php://stderr'),
             'strict_callables' => true,
             'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
-        ));
+        );
+
+        $this->view = new Mustache_Engine($config_mustache);
     }
 
     /**
