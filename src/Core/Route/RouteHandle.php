@@ -1,22 +1,15 @@
 <?php
-namespace JayaCode\Framework\Core\Router;
+namespace JayaCode\Framework\Core\Route;
 
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 
-class Router
+class RouteHandle
 {
     /**
      * @var array
      */
-    public $routes = array(
-        [
-            "id"    => "home",
-            "path"  => "/",
-            "controller"    => "HomeController",
-            "action"        => "index"
-        ]
-    );
+    public $routes = array();
 
     /**
      * @var Request
@@ -29,7 +22,7 @@ class Router
     public $response;
 
     /**
-     * Router constructor.
+     * Route constructor.
      * @param Request $request
      * @param Response $response
      */
@@ -39,7 +32,7 @@ class Router
     }
 
     /**
-     * initialize Router
+     * initialize Route
      * @param Request $request
      * @param Response $response
      */
@@ -50,14 +43,14 @@ class Router
     }
 
     /**
-     * Create Router object from static function
+     * Create Route object from static function
      * @param Request $request
      * @param Response $response
-     * @return Router
+     * @return Route
      */
     public static function create(Request &$request = null, Response &$response = null)
     {
-        return new Router($request, $response);
+        return new RouteHandle($request, $response);
     }
 
     /**
@@ -69,16 +62,10 @@ class Router
         $method = $this->request->method();
         $route = $this->getRouteByPath($path, $method);
 
-        if (!arr_has_key($route, "action")) {
-            throw new \Exception("not found action for route id : " . arr_get($route, "id"));
-        }
-
-        $action = arr_get($route, "action");
-
-        if (is_callable($action)) {
+        if (!is_null($route) && is_callable($route->action)) {
             // if use callback function
-            $this->handleCallback($action);
-        } elseif (arr_has_key($route, "controller") && is_string($action)) {
+            $this->handleCallback($route->action);
+        } elseif (!is_null($route) && $route->controller && is_string($route->action)) {
             // if use controller
             $this->handleController($route);
         } else {
@@ -88,6 +75,10 @@ class Router
         return $this->response;
     }
 
+    /**
+     * Handle route with action callback
+     * @param $func
+     */
     private function handleCallback($func)
     {
         $content = call_user_func($func);
@@ -96,11 +87,11 @@ class Router
 
     /**
      * Handle Controller
-     * @param $route
+     * @param Route $route
      */
-    private function handleController($route)
+    private function handleController(Route $route)
     {
-        $controller_class = "App\\Controller\\" . arr_get($route, "controller");
+        $controller_class = "App\\Controller\\" . $route->controller;
 
         if (!class_exists($controller_class)) {
             throw new \InvalidArgumentException("controller " . $controller_class . " not found");
@@ -108,7 +99,7 @@ class Router
 
         $controller = new $controller_class($this->request, $this->response);
 
-        $action = arr_get($route, "action");
+        $action = $route->action;
 
         if (!method_exists($controller, $action)) {
             throw new \InvalidArgumentException("method " . $action . " not found");
@@ -133,7 +124,7 @@ class Router
         }
 
         foreach ($this->routes as $route) {
-            if (arr_has_key($route, "id") && arr_get($route, "id") == $id) {
+            if ($route->id == $id) {
                 return $route;
             }
         }
@@ -150,7 +141,7 @@ class Router
     {
 
         foreach ($this->routes as $route) {
-            if (arr_get($route, "path") == $path && arr_get($route, "method", "GET") == $method) {
+            if ($route->path == $path && $route->method == $method) {
                 return $route;
             }
         }

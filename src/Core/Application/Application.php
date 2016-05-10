@@ -3,7 +3,7 @@ namespace JayaCode\Framework\Core\Application;
 
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
-use JayaCode\Framework\Core\Router\Router;
+use JayaCode\Framework\Core\Route\RouteHandle;
 
 /**
  * Class Application
@@ -22,9 +22,9 @@ class Application
     public $response;
 
     /**
-     * @var Router
+     * @var RouterHandle
      */
-    public $router;
+    public $routeHandle;
 
     /**
      * Application constructor.
@@ -50,7 +50,7 @@ class Application
     {
         $this->request = Request::createFromSymfonyGlobal();
         $this->response = Response::create();
-        $this->router = Router::create($this->request, $this->response);
+        $this->routeHandle = RouteHandle::create($this->request, $this->response);
 
         $this->setTimeZone();
     }
@@ -65,7 +65,7 @@ class Application
      */
     public function run()
     {
-        $this->router->handle();
+        $this->routeHandle->handle();
         $this->response->send();
     }
 
@@ -106,6 +106,6 @@ class Application
      */
     public function setListRoute($routes_arr = array())
     {
-        $this->router->setRoutes($routes_arr);
+        $this->routeHandle->setRoutes($routes_arr);
     }
 }
