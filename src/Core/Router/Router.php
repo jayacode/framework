@@ -1,7 +1,6 @@
 <?php
 namespace JayaCode\Framework\Core\Router;
 
-use JayaCode\Framework\Core\Helper\HelperArray;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 
@@ -96,7 +95,7 @@ class Router
     }
 
     /**
-     * @param null $id
+     * @param string $id
      * @return array
      */
     public function getRoute($id = null)
