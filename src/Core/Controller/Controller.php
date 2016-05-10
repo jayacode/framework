@@ -1,9 +1,11 @@
 <?php
 namespace JayaCode\Framework\Core\Controller;
 
+use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
-use JayaCode\Framework\Core\View\View;
-use Symfony\Component\HttpFoundation\Request;
+use Mustache_Autoloader;
+use Mustache_Engine;
+use Mustache_Loader_FilesystemLoader;
 
 class Controller
 {
@@ -18,7 +20,7 @@ class Controller
     protected $response;
 
     /**
-     * @var View
+     * @var Mustache_Engine
      */
     protected $view;
     /**
@@ -40,7 +42,26 @@ class Controller
         $this->request = $request;
         $this->response = $response;
 
-        $this->view = new View();
+        Mustache_Autoloader::register();
+
+        $this->view = new Mustache_Engine(array(
+            'template_class_prefix' => '__MyTemplates_',
+            'cache' => dirname(__FILE__).'/tmp/cache/mustache',
+            'cache_file_mode' => 0666, // Please, configure your umask instead of doing this :)
+            'cache_lambda_templates' => true,
+            'loader' => new Mustache_Loader_FilesystemLoader(__APP_DIR__.'/resource/views'),
+            'partials_loader' => new Mustache_Loader_FilesystemLoader(__APP_DIR__.'/resource/views/partials'),
+            'helpers' => array('i18n' => function ($text) {
+                // do something translatey here...
+            }),
+            'escape' => function ($value) {
+                return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
+            },
+            'charset' => 'ISO-8859-1',
+            'logger' => new Mustache_Logger_StreamLogger('php://stderr'),
+            'strict_callables' => true,
+            'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
+        ));
     }
 
     /**
