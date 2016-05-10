@@ -68,34 +68,45 @@ class Router
         $path = $this->request->path();
         $route = $this->getRouteByPath($path);
 
-        if (arr_has_key($route, "action") && is_callable(arr_get($route, "action"))) {
+        if (!arr_has_key($route, "action")) {
+            throw new \Exception("not found action for route id : " . arr_get($route, "id"));
+        }
+
+        if (is_callable(arr_get($route, "action"))) {
             // if use callback function
             $content = call_user_func(arr_get($route, "action"));
             $this->response->setContent($content);
-        } elseif (arr_has_key($route, "controller") && arr_has_key($route, "action")
-            && is_string(arr_get($route, "action"))) {
+        } elseif (arr_has_key($route, "controller") && is_string(arr_get($route, "action"))) {
             // if use controller
-            $controller_class = "App\\Controller\\" . arr_get($route, "controller");
-
-            if (!class_exists($controller_class)) {
-                throw new \InvalidArgumentException("controller " . $controller_class . " not found");
-            }
-
-            $controller = new $controller_class($this->request, $this->response);
-
-            $action = arr_get($route, "action");
-
-            if (!method_exists($controller, $action)) {
-                throw new \InvalidArgumentException("method " . $action . " not found");
-            }
-
-            $content = $controller->$action();
-            $this->response->setContent($content);
+            $this->handleController($route);
         } else {
             $this->response->setNotFound($path);
         }
 
         return $this->response;
+    }
+
+    /**
+     * @param $route
+     */
+    private function handleController($route)
+    {
+        $controller_class = "App\\Controller\\" . arr_get($route, "controller");
+
+        if (!class_exists($controller_class)) {
+            throw new \InvalidArgumentException("controller " . $controller_class . " not found");
+        }
+
+        $controller = new $controller_class($this->request, $this->response);
+
+        $action = arr_get($route, "action");
+
+        if (!method_exists($controller, $action)) {
+            throw new \InvalidArgumentException("method " . $action . " not found");
+        }
+
+        $content = $controller->$action();
+        $this->response->setContent($content);
     }
 
     /**
