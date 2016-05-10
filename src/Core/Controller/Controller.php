@@ -40,6 +40,7 @@ class Controller
      */
     public function initialize(Request $request = null, Response $response = null)
     {
+        $app_dir = defined("__APP_DIR__") ? __APP_DIR__ : '/';
         $view_dir = defined("__APP_DIR__") ? __APP_DIR__.'/resource/views' : '/';
 
         $this->request = $request;
@@ -48,8 +49,7 @@ class Controller
         Mustache_Autoloader::register();
 
         $config_mustache = array(
-            'template_class_prefix' => '__MyTemplates_',
-            'cache' => dirname(__FILE__).'/tmp/cache/mustache',
+            'cache' => $app_dir .'/tmp/cache/mustache',
             'cache_file_mode' => 0666, // Please, configure your umask instead of doing this :)
             'cache_lambda_templates' => true,
             'loader' => new Mustache_Loader_FilesystemLoader($view_dir),
