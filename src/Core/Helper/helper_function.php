@@ -34,4 +34,3 @@ if (!function_exists("is_arr")) {
         return \JayaCode\Framework\Core\Helper\HelperArray::isArray($arr);
     }
 }
-
