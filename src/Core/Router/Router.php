@@ -1,6 +1,7 @@
 <?php
 namespace JayaCode\Framework\Core\Router;
 
+use JayaCode\Framework\Core\Helper\HelperArray;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 
@@ -10,10 +11,11 @@ class Router
      * @var array
      */
     public $routes = array(
-        "home" => [
-            "/",
-            "HomeController",
-            "index"
+        [
+            "id"    => "home",
+            "path"  => "/",
+            "controller"    => "HomeController",
+            "action"        => "index"
         ]
     );
 
@@ -65,21 +67,27 @@ class Router
     public function handle()
     {
         $path = $this->request->path();
-        $route = null;
-
-        foreach ($this->routes as $key => $value) {
-            if ($this->routes[$key][0] == $path) {
-                $route = $this->routes[$key];
-                break;
-            }
-        }
+        $route = $this->getRouteByPath($path);
 
         if (!is_null($route)) {
-            $controller_class = "App\\Controller\\" . $route[1];
-            $controller = new $controller_class($this->request, $this->response);
+            if (arr_has_key($route, "controller") && arr_has_key($route, "action")) {
+                $controller_class = "App\\Controller\\" . arr_get($route, "controller");
 
-            $content = $controller->$route[2]();
-            $this->response->setContent($content);
+                if (!class_exists($controller_class)) {
+                    throw new \InvalidArgumentException("controller " . $controller_class . " not found");
+                }
+
+                $controller = new $controller_class($this->request, $this->response);
+
+                $action = arr_has_key($route, "action");
+
+                if (!method_exists($controller, $action)) {
+                    throw new \InvalidArgumentException("method " . $action . " not found");
+                }
+
+                $content = $controller->$action();
+                $this->response->setContent($content);
+            }
         } else {
             $this->response->setStatusCode(404);
         }
@@ -88,11 +96,45 @@ class Router
     }
 
     /**
+     * @param null $id
      * @return array
      */
-    public function getRoutes()
+    public function getRoute($id = null)
     {
-        return $this->routes;
+        if (is_null($id)) {
+            return $this->routes;
+        }
+
+        if (!is_string($id)) {
+            throw new \InvalidArgumentException("var id must be a string");
+        }
+
+        foreach ($this->routes as $route) {
+            if (arr_has_key($route, "id") && arr_get($route, "id") == $id) {
+                return $route;
+            }
+        }
+
+        throw new \OutOfBoundsException("not found route with id " . $id);
+    }
+
+    /**
+     * @param null $path
+     * @return array
+     */
+    public function getRouteByPath($path = null)
+    {
+        if (!is_string($path)) {
+            throw new \InvalidArgumentException("var path must be a string");
+        }
+
+        foreach ($this->routes as $route) {
+            if (arr_has_key($route, "path") && arr_get($route, "path") == $path) {
+                return $route;
+            }
+        }
+
+        return null;
     }
 
     /**

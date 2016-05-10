@@ -14,6 +14,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function testHasKey($expected, $arr, $key)
     {
         $this->assertEquals($expected, HelperArray::hasKey($arr, $key));
+        $this->assertEquals($expected, arr_has_key($arr, $key));
     }
 
     public function testHasKeyProvider()
@@ -54,6 +55,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
     public function testGetVal($expected, $arr, $key)
     {
         $this->assertEquals($expected, HelperArray::getVal($arr, $key));
+        $this->assertEquals($expected, arr_get($arr, $key));
     }
 
     public function testGetValProvider()

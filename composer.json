@@ -24,18 +24,20 @@
         "squizlabs/php_codesniffer": "~2.3"
     },
     "autoload": {
-        "files": [
-          "src/Core/Helper/helper_function.php"
-        ],
-
         "psr-4": {
             "JayaCode\\Framework\\": "src"
-        }
+        },
+        "files": [
+          "src/Core/Helper/helper_function.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "JayaCode\\Framework\\Tests\\": "tests"
-        }
+        },
+        "files": [
+          "src/Core/Helper/helper_function.php"
+        ]
     },
     "scripts": {
         "test": "phpunit"
