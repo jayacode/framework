@@ -66,17 +66,19 @@ class Router
     public function handle()
     {
         $path = $this->request->path();
-        $route = $this->getRouteByPath($path);
+        $method = $this->request->method();
+        $route = $this->getRouteByPath($path, $method);
 
         if (!arr_has_key($route, "action")) {
             throw new \Exception("not found action for route id : " . arr_get($route, "id"));
         }
 
-        if (is_callable(arr_get($route, "action"))) {
+        $action = arr_get($route, "action");
+
+        if (is_callable($action)) {
             // if use callback function
-            $content = call_user_func(arr_get($route, "action"));
-            $this->response->setContent($content);
-        } elseif (arr_has_key($route, "controller") && is_string(arr_get($route, "action"))) {
+            $this->handleCallback($action);
+        } elseif (arr_has_key($route, "controller") && is_string($action)) {
             // if use controller
             $this->handleController($route);
         } else {
@@ -86,7 +88,14 @@ class Router
         return $this->response;
     }
 
+    private function handleCallback($func)
+    {
+        $content = call_user_func($func);
+        $this->response->setContent($content);
+    }
+
     /**
+     * Handle Controller
      * @param $route
      */
     private function handleController($route)
@@ -134,16 +143,14 @@ class Router
 
     /**
      * @param string $path
+     * @param string $method
      * @return array
      */
-    public function getRouteByPath($path = null)
+    public function getRouteByPath($path, $method)
     {
-        if (!is_string($path)) {
-            throw new \InvalidArgumentException("var path must be a string");
-        }
 
         foreach ($this->routes as $route) {
-            if (arr_has_key($route, "path") && arr_get($route, "path") == $path) {
+            if (arr_get($route, "path") == $path && arr_get($route, "method", "GET") == $method) {
                 return $route;
             }
         }
