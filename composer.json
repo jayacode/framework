@@ -24,6 +24,10 @@
         "squizlabs/php_codesniffer": "~2.3"
     },
     "autoload": {
+        "files": [
+          "src/Core/Helper/helper_function.php"
+        ],
+
         "psr-4": {
             "JayaCode\\Framework\\": "src"
         }

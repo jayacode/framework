@@ -1,5 +1,5 @@
 <?php
-namespace JayaCode\Framework;
+namespace JayaCode\Framework\Tests;
 
 class SimpleTest extends \PHPUnit_Framework_TestCase
 {
