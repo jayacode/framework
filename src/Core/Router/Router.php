@@ -118,7 +118,7 @@ class Router
     }
 
     /**
-     * @param null $path
+     * @param string $path
      * @return array
      */
     public function getRouteByPath($path = null)
