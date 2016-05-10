@@ -68,27 +68,31 @@ class Router
         $path = $this->request->path();
         $route = $this->getRouteByPath($path);
 
-        if (!is_null($route)) {
-            if (arr_has_key($route, "controller") && arr_has_key($route, "action")) {
-                $controller_class = "App\\Controller\\" . arr_get($route, "controller");
+        if (arr_has_key($route, "action") && is_callable(arr_get($route, "action"))) {
+            // if use callback function
+            $content = call_user_func(arr_get($route, "action"));
+            $this->response->setContent($content);
+        } elseif (arr_has_key($route, "controller") && arr_has_key($route, "action")
+            && is_string(arr_get($route, "action"))) {
+            // if use controller
+            $controller_class = "App\\Controller\\" . arr_get($route, "controller");
 
-                if (!class_exists($controller_class)) {
-                    throw new \InvalidArgumentException("controller " . $controller_class . " not found");
-                }
-
-                $controller = new $controller_class($this->request, $this->response);
-
-                $action = arr_has_key($route, "action");
-
-                if (!method_exists($controller, $action)) {
-                    throw new \InvalidArgumentException("method " . $action . " not found");
-                }
-
-                $content = $controller->$action();
-                $this->response->setContent($content);
+            if (!class_exists($controller_class)) {
+                throw new \InvalidArgumentException("controller " . $controller_class . " not found");
             }
+
+            $controller = new $controller_class($this->request, $this->response);
+
+            $action = arr_get($route, "action");
+
+            if (!method_exists($controller, $action)) {
+                throw new \InvalidArgumentException("method " . $action . " not found");
+            }
+
+            $content = $controller->$action();
+            $this->response->setContent($content);
         } else {
-            $this->response->setStatusCode(404);
+            $this->response->setNotFound($path);
         }
 
         return $this->response;

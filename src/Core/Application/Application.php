@@ -100,4 +100,12 @@ class Application
     {
         $this->response = $response;
     }
+
+    /**
+     * @param array $routes_arr
+     */
+    public function setListRoute($routes_arr = array())
+    {
+        $this->router->setRoutes($routes_arr);
+    }
 }
