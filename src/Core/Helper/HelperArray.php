@@ -3,7 +3,7 @@ namespace JayaCode\Framework\Core\Helper;
 
 class HelperArray
 {
-    public static function getVal($arr = array(), $key = "")
+    public static function getVal($arr = array(), $key = "", $default = null)
     {
         $val = $arr;
         $i = 0;
@@ -11,7 +11,7 @@ class HelperArray
 
         while ($i < count($keys)) {
             if (!HelperArray::hasKey($val, $keys[$i])) {
-                throw new \OutOfBoundsException("key ". $keys[$i] .", not found in the target array.");
+                return $default;
             }
 
             $val = $val[$keys[$i]];

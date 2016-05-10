@@ -4,11 +4,12 @@ if (!function_exists("arr_get")) {
     /**
      * @param $arr
      * @param $key
+     * @param $default
      * @return array
      */
-    function arr_get($arr, $key)
+    function arr_get($arr, $key, $default = null)
     {
-        return \JayaCode\Framework\Core\Helper\HelperArray::getVal($arr, $key);
+        return \JayaCode\Framework\Core\Helper\HelperArray::getVal($arr, $key, $default);
     }
 }
 
