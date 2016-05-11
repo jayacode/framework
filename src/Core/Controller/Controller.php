@@ -88,7 +88,7 @@ class Controller
      * @param array $data
      * @return string
      */
-    public function view($name, array $data = array())
+    protected function view($name, array $data = array())
     {
         $tpl = $this->viewEngine->loadTemplate($name);
         return $tpl->render($data);
