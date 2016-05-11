@@ -22,7 +22,7 @@ class Application
     public $response;
 
     /**
-     * @var RouterHandle
+     * @var RouteHandle
      */
     public $routeHandle;
 

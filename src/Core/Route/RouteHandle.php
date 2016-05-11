@@ -46,7 +46,7 @@ class RouteHandle
      * Create Route object from static function
      * @param Request $request
      * @param Response $response
-     * @return Route
+     * @return RouteHandle
      */
     public static function create(Request &$request = null, Response &$response = null)
     {
@@ -77,9 +77,9 @@ class RouteHandle
 
     /**
      * Handle route with action callback
-     * @param $func
+     * @param callable $func
      */
-    private function handleCallback($func)
+    private function handleCallback(callable $func)
     {
         $content = call_user_func($func);
         $this->response->setContent($content);
@@ -111,7 +111,7 @@ class RouteHandle
 
     /**
      * @param string $id
-     * @return array
+     * @return Route
      */
     public function getRoute($id = null)
     {
@@ -135,7 +135,7 @@ class RouteHandle
     /**
      * @param string $path
      * @param string $method
-     * @return array
+     * @return Route
      */
     public function getRouteByPath($path, $method)
     {
