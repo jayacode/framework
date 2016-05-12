@@ -1,20 +1,26 @@
 <?php
 namespace JayaCode\Framework\Core\View;
 
-use Mustache_Engine;
-use Mustache_Loader_FilesystemLoader;
-use Mustache_Logger_StreamLogger;
+use Twig_Autoloader;
+use Twig_Environment;
+use Twig_Loader_Filesystem;
 
 /**
  * Class View
  * @package JayaCode\Framework\Core\View
  */
-class View extends Mustache_Engine
+class View extends Twig_Environment
 {
-    private $app_dir;
-    private $view_dir;
 
+    /**
+     * @var array
+     */
     private $engineConfig;
+
+    /**
+     * @var Twig_Loader_Filesystem
+     */
+    private $loader;
 
     /**
      * View constructor.
@@ -22,8 +28,7 @@ class View extends Mustache_Engine
      */
     public function __construct(array $options = array())
     {
-        $this->app_dir = defined("__APP_DIR__") ? __APP_DIR__ : '/';
-        $this->view_dir = defined("__APP_DIR__") ? __APP_DIR__.'/resource/views' : '/';
+        Twig_Autoloader::register();
 
         if (!empty($options)) {
             $this->engineConfig = $options;
@@ -31,7 +36,11 @@ class View extends Mustache_Engine
             $this->defaultEngineConfig();
         }
 
-        parent::__construct($this->engineConfig);
+        $this->loader = new Twig_Loader_Filesystem($this->engineConfig['view_dir']);
+
+        parent::__construct($this->loader);
+
+        $this->setCache($this->engineConfig['cache']);
     }
 
     /**
@@ -39,19 +48,9 @@ class View extends Mustache_Engine
      */
     private function defaultEngineConfig()
     {
-        $this->engineConfig = array(
-            'cache' => $this->app_dir .'/tmp/cache/mustache',
-            'cache_file_mode' => 0666, // Please, configure your umask instead of doing this :)
-            'cache_lambda_templates' => true,
-            'loader' => new Mustache_Loader_FilesystemLoader($this->view_dir),
-            'partials_loader' => new Mustache_Loader_FilesystemLoader($this->view_dir),
-            'escape' => function ($value) {
-                return htmlspecialchars($value, ENT_COMPAT, 'UTF-8');
-            },
-            'charset' => 'ISO-8859-1',
-            'logger' => new Mustache_Logger_StreamLogger('php://stderr'),
-            'strict_callables' => true,
-            'pragmas' => [Mustache_Engine::PRAGMA_FILTERS],
-        );
+        $this->engineConfig['app_dir'] = defined("__APP_DIR__") ? __APP_DIR__ : '/';
+        $this->engineConfig['view_dir'] = defined("__APP_DIR__") ? __APP_DIR__.'/resource/views' : '/';
+
+        $this->engineConfig['cache'] = $this->engineConfig['app_dir'].'/tmp/cache/twig';
     }
 }
