@@ -20,7 +20,7 @@ class View extends Twig_Environment
     /**
      * @var Twig_Loader_Filesystem
      */
-    private $loader;
+    protected $loader;
 
     /**
      * View constructor.
