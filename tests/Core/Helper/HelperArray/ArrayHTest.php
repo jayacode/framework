@@ -1,5 +1,5 @@
 <?php
-namespace JayaCode\Framework\Tests\Helper\AArrayHelper\ArrayHelper;
+namespace JayaCode\Framework\Tests\Helper\HelperArray;
 
 use JayaCode\Framework\Core\Helper\HelperArray\ArrayH;
 
@@ -10,11 +10,12 @@ class ArrayHTest extends \PHPUnit_Framework_TestCase
      * @param $expected
      * @param $arr
      * @param $key
+     * @param null $default
      */
-    public function testGetVal($expected, $arr, $key)
+    public function testGetVal($expected, $arr, $key, $default = null)
     {
-        $this->assertEquals($expected, ArrayH::get($arr, $key));
-        $this->assertEquals($expected, arr_get($arr, $key));
+        $this->assertEquals($expected, ArrayH::get($arr, $key, $default));
+        $this->assertEquals($expected, arr_get($arr, $key, $default));
     }
 
     public function testGetValProvider()
@@ -24,6 +25,7 @@ class ArrayHTest extends \PHPUnit_Framework_TestCase
          *  $expected,
          *  $arr
          *  $key
+         *  $default
          * )
          */
         return array(
@@ -61,6 +63,20 @@ class ArrayHTest extends \PHPUnit_Framework_TestCase
                     "test2" => "test2"
                 ),
                 "test1.test1-1"
+            ),
+
+            array(
+                "default-value",
+                array(
+                    "test1" => array(
+                        "test1-1" => array(
+                            "test1-1-1" => "test1-1-1-val"
+                        )
+                    ),
+                    "test2" => "test2"
+                ),
+                "test1.test7-1",
+                "default-value"
             ),
         );
     }

@@ -1,10 +1,23 @@
 <?php
 namespace JayaCode\Framework\Core\Helper\HelperArray;
 
+/**
+ * Class ArrayH
+ * @package JayaCode\Framework\Core\Helper\HelperArray
+ */
 class ArrayH
 {
+    /**
+     * @var string
+     */
     public static $pathSeparator = ".";
 
+    /**
+     * @param $arr
+     * @param $path
+     * @param null $default
+     * @return null
+     */
     public static function get($arr, $path, $default = null)
     {
         $val = $default;
@@ -12,9 +25,15 @@ class ArrayH
             $val = $prosArr;
         });
 
-        return $val;
+        return $val ? $val : $default;
     }
 
+    /**
+     * @param array $arr
+     * @param $path
+     * @param callable $callback
+     * @param array|null $prosArr
+     */
     private static function exploreAtPath(array &$arr, $path, callable $callback, array &$prosArr = null)
     {
         if ($prosArr === null) {

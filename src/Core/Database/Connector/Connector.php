@@ -9,8 +9,12 @@ use Stringy\Stringy;
  * Class Connector
  * @package JayaCode\Framework\Core\Database\Connector
  */
-class Connector
+abstract class Connector
 {
+    /**
+     * @var PDO
+     */
+    protected $pdo;
 
     /**
      * Creates a PDO instance representing a connection to a database
@@ -23,12 +27,12 @@ class Connector
     public function createConnection($dsn, $username, $password, $options = array())
     {
         try {
-            $pdo = new PDO($dsn, $username, $password, $options);
+            $this->pdo = new PDO($dsn, $username, $password, $options);
         } catch (Exception $exception) {
-            $pdo = $this->tryAgainCreateConnectionLostConnection($exception, $dsn, $username, $password, $options);
+            $this->pdo = $this->tryAgainLostConnection($exception, $dsn, $username, $password, $options);
         }
 
-        return $pdo;
+        return $this->pdo;
     }
 
     /**
@@ -64,7 +68,7 @@ class Connector
      * @param $options
      * @return PDO
      */
-    protected function tryAgainCreateConnectionLostConnection(
+    protected function tryAgainLostConnection(
         Exception $exception,
         $dsn,
         $username,
@@ -75,4 +79,10 @@ class Connector
             return new PDO($dsn, $username, $password, $options);
         }
     }
+
+    /**
+     * @param $options
+     * @return string
+     */
+    abstract protected function getDsn($options);
 }
