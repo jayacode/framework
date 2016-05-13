@@ -135,7 +135,7 @@ class RouteHandle
 
     /**
      * @param string $key
-     * @return Route
+     * @return mixed
      */
     public function getRoute($key = null)
     {
