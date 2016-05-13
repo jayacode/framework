@@ -8,7 +8,7 @@ class ArrayH
     public static function get($arr, $path, $default = null)
     {
         $val = $default;
-        static::exploreAtPath($arr, $path, function (&$prosArr) use (&$val) {
+        self::exploreAtPath($arr, $path, function (&$prosArr) use (&$val) {
             $val = $prosArr;
         });
 
@@ -29,7 +29,7 @@ class ArrayH
         $nextPath = array_shift($explodedPath);
 
         if (count($explodedPath) > 0) {
-            static::exploreAtPath(
+            self::exploreAtPath(
                 $arr,
                 implode(self::$pathSeparator, $explodedPath),
                 $callback,
