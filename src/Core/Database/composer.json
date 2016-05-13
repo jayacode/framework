@@ -1,0 +1,26 @@
+{
+    "name": "jayacode/database",
+    "description": "The Core JayaCode Database",
+    "keywords": ["jayacode", "database", "SQL", "orm"],
+    "license": "MIT",
+    "homepage": "http://jayacode.com",
+    "support": {
+        "issues": "https://github.com/jayacode/framework/issues",
+        "source": "https://github.com/jayacode/framework"
+    },
+    "authors": [
+        {
+            "name": "Restu Suhendar",
+            "email": "restu.suhendar@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "danielstjules/stringy": "2.3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "JayaCode\\Framework\\Core\\Database": ""
+        }
+    }
+}
