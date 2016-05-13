@@ -12,27 +12,22 @@ use Stringy\Stringy;
 abstract class Connector
 {
     /**
-     * @var PDO
-     */
-    protected $pdo;
-
-    /**
      * Creates a PDO instance representing a connection to a database
      * @param $dsn
-     * @param $username
-     * @param $password
-     * @param array $options
+     * @param $config
      * @return PDO
      */
-    public function createConnection($dsn, $username, $password, $options = array())
+    public function createConnection($dsn, $config)
     {
-        try {
-            $this->pdo = new PDO($dsn, $username, $password, $options);
-        } catch (Exception $exception) {
-            $this->pdo = $this->tryAgainLostConnection($exception, $dsn, $username, $password, $options);
-        }
+        $username = arr_get($config, "username");
+        $password = arr_get($config, "password");
+        $options = arr_get($config, "options", array());
 
-        return $this->pdo;
+        try {
+            return new PDO($dsn, $username, $password, $options);
+        } catch (Exception $exception) {
+            return $this->tryAgainLostConnection($exception, $dsn, $username, $password, $options);
+        }
     }
 
     /**
@@ -63,26 +58,28 @@ abstract class Connector
     /**
      * @param Exception $exception
      * @param $dsn
-     * @param $username
-     * @param $password
-     * @param $options
+     * @param $config
      * @return PDO
+     * @throws Exception
      */
-    protected function tryAgainLostConnection(
-        Exception $exception,
-        $dsn,
-        $username,
-        $password,
-        $options
-    ) {
+    protected function tryAgainLostConnection(Exception $exception, $dsn, $config)
+    {
         if ($this->isErrorLostConnection($exception)) {
-            return new PDO($dsn, $username, $password, $options);
+            return new PDO($dsn, $config["username"], $config["password"], $config["options"]);
+        } else {
+            throw $exception;
         }
     }
 
     /**
-     * @param $options
+     * @param $config
      * @return string
      */
-    abstract protected function getDsn($options);
+    abstract protected function getDsn($config);
+
+    /**
+     * @param $config
+     * @return PDO
+     */
+    abstract public function connect($config);
 }
