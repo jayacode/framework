@@ -1,51 +1,10 @@
 <?php
-namespace JayaCode\Framework\Tests\Helper\ArrayHelper;
+namespace JayaCode\Framework\Tests\Helper\AArrayHelper\ArrayHelper;
 
-use JayaCode\Framework\Core\Helper\HelperArray;
+use JayaCode\Framework\Core\Helper\HelperArray\ArrayH;
 
-class ArrayHelperTest extends \PHPUnit_Framework_TestCase
+class ArrayHTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @dataProvider testHasKeyProvider
-     * @param $expected
-     * @param $arr
-     * @param $key
-     */
-    public function testHasKey($expected, $arr, $key)
-    {
-        $this->assertEquals($expected, HelperArray::hasKey($arr, $key));
-        $this->assertEquals($expected, arr_has_key($arr, $key));
-    }
-
-    public function testHasKeyProvider()
-    {
-        /**
-         * array (
-         *  $expected,
-         *  $arr
-         *  $key
-         * )
-         */
-        return array(
-            array(
-                false,
-                array(
-                    "test1" => "test1",
-                    "test2" => "test2"
-                ),
-                "cek"
-            ),
-            array(
-                true,
-                array(
-                    "test1" => "test1",
-                    "test2" => "test2"
-                ),
-                "test2"
-            ),
-        );
-    }
-
     /**
      * @dataProvider testGetValProvider
      * @param $expected
@@ -54,7 +13,7 @@ class ArrayHelperTest extends \PHPUnit_Framework_TestCase
      */
     public function testGetVal($expected, $arr, $key)
     {
-        $this->assertEquals($expected, HelperArray::getVal($arr, $key));
+        $this->assertEquals($expected, ArrayH::get($arr, $key));
         $this->assertEquals($expected, arr_get($arr, $key));
     }
 
