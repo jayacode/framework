@@ -13,7 +13,7 @@ class Route
     public $path;
 
     /**
-     * @var string
+     * @var array | callable
      */
     public $action;
 
@@ -21,11 +21,6 @@ class Route
      * @var string
      */
     public $key;
-
-    /**
-     * @var string
-     */
-    public $controller;
 
     /**
      * @var string
@@ -46,25 +41,15 @@ class Route
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
      * @param string $method
      * @param string $middleware
      * @param string $validation
      */
-    public function __construct(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "GET",
-        $middleware = null,
-        $validation = null
-    ) {
-
+    public function __construct($key, $path, $action, $method = "GET", $middleware = null, $validation = null)
+    {
         $this->path = $path;
         $this->action = $action;
         $this->key = $key;
-        $this->controller = $controller;
         $this->method = $method;
         $this->middleware = $middleware;
         $this->validation = $validation;
@@ -74,22 +59,14 @@ class Route
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
      * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function create(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "GET",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function create($key, $path, $action, $method = "GET", $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, $method, $middleware, $validation);
     }
 
 
@@ -97,143 +74,82 @@ class Route
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function get(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "GET",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function get($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "GET", $middleware, $validation);
     }
 
     /**
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
-     * @return static
+     * @return Route
      */
-    public static function post(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "POST",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function post($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "POST", $middleware, $validation);
     }
 
     /**
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function put(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "PUT",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function put($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "PUT", $middleware, $validation);
     }
 
-    public static function head(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "HEAD",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function head($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "HEAD", $middleware, $validation);
     }
 
     /**
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function delete(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "DELETE",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function delete($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "DELETE", $middleware, $validation);
     }
 
     /**
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function options(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "OPTIONS",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function options($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "OPTIONS", $middleware, $validation);
     }
 
     /**
      * @param $key
      * @param $path
      * @param $action
-     * @param string $controller
-     * @param string $method
      * @param string $middleware
      * @param string $validation
      * @return static
      */
-    public static function connect(
-        $key,
-        $path,
-        $action,
-        $controller = null,
-        $method = "CONNECT",
-        $middleware = null,
-        $validation = null
-    ) {
-        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
+    public static function connect($key, $path, $action, $middleware = null, $validation = null)
+    {
+        return new static($key, $path, $action, "CONNECT", $middleware, $validation);
     }
 }

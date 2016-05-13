@@ -4,6 +4,10 @@ namespace JayaCode\Framework\Core\Route;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 
+/**
+ * Class RouteHandle
+ * @package JayaCode\Framework\Core\Route
+ */
 class RouteHandle
 {
     /**
@@ -62,17 +66,37 @@ class RouteHandle
         $method = $this->request->method();
         $route = $this->getRouteByPath($path, $method);
 
-        if (!is_null($route) && is_callable($route->action)) {
-            // if use callback function
-            $this->handleCallback($route->action);
-        } elseif (!is_null($route) && $route->controller && is_string($route->action)) {
-            // if use controller
-            $this->handleController($route);
-        } else {
+        if (!$this->tryHandleRequest($route)) {
             $this->response->setNotFound($path);
         }
 
         return $this->response;
+    }
+
+    /**
+     * Try to handle request if success return true
+     * @param $route
+     * @return bool
+     */
+    private function tryHandleRequest($route)
+    {
+        if (is_null($route)) {
+            return false;
+        }
+
+        // is callback function
+        if (is_callable($route->action)) {
+            $this->handleCallback($route->action);
+            return true;
+        }
+
+        // is class controller
+        if (is_array($route->action) && arr_get($route->action, "controller") && arr_get($route->action, "method")) {
+            $this->handleController($route);
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -91,7 +115,7 @@ class RouteHandle
      */
     private function handleController(Route $route)
     {
-        $controllerName = "App\\Controller\\" . $route->controller;
+        $controllerName = "App\\Controller\\" . $route->action["controller"];
 
         if (!class_exists($controllerName)) {
             throw new \InvalidArgumentException("controller " . $controllerName . " not found");
@@ -99,13 +123,13 @@ class RouteHandle
 
         $controller = new $controllerName($this->request, $this->response);
 
-        $action = $route->action;
+        $actionMethod = $route->action["method"];
 
-        if (!method_exists($controller, $action)) {
-            throw new \InvalidArgumentException("method " . $action . " not found");
+        if (!method_exists($controller, $actionMethod)) {
+            throw new \InvalidArgumentException("method " . $actionMethod . " not found");
         }
 
-        $content = $controller->$action();
+        $content = $controller->$actionMethod();
         $this->response->setContent($content);
     }
 
