@@ -102,10 +102,10 @@ class Application
     }
 
     /**
-     * @param array $routes_arr
+     * @param array $routesArr
      */
-    public function setListRoute($routes_arr = array())
+    public function setListRoute($routesArr = array())
     {
-        $this->routeHandle->setRoutes($routes_arr);
+        $this->routeHandle->setRoutes($routesArr);
     }
 }

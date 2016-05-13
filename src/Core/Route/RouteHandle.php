@@ -91,13 +91,13 @@ class RouteHandle
      */
     private function handleController(Route $route)
     {
-        $controller_class = "App\\Controller\\" . $route->controller;
+        $controllerName = "App\\Controller\\" . $route->controller;
 
-        if (!class_exists($controller_class)) {
-            throw new \InvalidArgumentException("controller " . $controller_class . " not found");
+        if (!class_exists($controllerName)) {
+            throw new \InvalidArgumentException("controller " . $controllerName . " not found");
         }
 
-        $controller = new $controller_class($this->request, $this->response);
+        $controller = new $controllerName($this->request, $this->response);
 
         $action = $route->action;
 
@@ -110,26 +110,26 @@ class RouteHandle
     }
 
     /**
-     * @param string $id
+     * @param string $key
      * @return Route
      */
-    public function getRoute($id = null)
+    public function getRoute($key = null)
     {
-        if (is_null($id)) {
+        if (is_null($key)) {
             return $this->routes;
         }
 
-        if (!is_string($id)) {
-            throw new \InvalidArgumentException("var id must be a string");
+        if (!is_string($key)) {
+            throw new \InvalidArgumentException("var key must be a string");
         }
 
         foreach ($this->routes as $route) {
-            if ($route->id == $id) {
+            if ($route->key == $key) {
                 return $route;
             }
         }
 
-        throw new \OutOfBoundsException("not found route with id " . $id);
+        throw new \OutOfBoundsException("not found route with key " . $key);
     }
 
     /**

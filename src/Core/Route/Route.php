@@ -20,7 +20,7 @@ class Route
     /**
      * @var string
      */
-    public $id;
+    public $key;
 
     /**
      * @var string
@@ -43,7 +43,7 @@ class Route
     public $validation;
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -52,7 +52,7 @@ class Route
      * @param string $validation
      */
     public function __construct(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -63,7 +63,7 @@ class Route
 
         $this->path = $path;
         $this->action = $action;
-        $this->id = $id;
+        $this->key = $key;
         $this->controller = $controller;
         $this->method = $method;
         $this->middleware = $middleware;
@@ -71,7 +71,7 @@ class Route
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -81,7 +81,7 @@ class Route
      * @return static
      */
     public static function create(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -89,12 +89,12 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -104,7 +104,7 @@ class Route
      * @return static
      */
     public static function get(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -112,11 +112,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -126,7 +126,7 @@ class Route
      * @return static
      */
     public static function post(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -134,11 +134,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -148,7 +148,7 @@ class Route
      * @return static
      */
     public static function put(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -156,11 +156,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     public static function head(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -168,11 +168,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -182,7 +182,7 @@ class Route
      * @return static
      */
     public static function delete(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -190,11 +190,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -204,7 +204,7 @@ class Route
      * @return static
      */
     public static function options(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -212,11 +212,11 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 
     /**
-     * @param $id
+     * @param $key
      * @param $path
      * @param $action
      * @param string $controller
@@ -226,7 +226,7 @@ class Route
      * @return static
      */
     public static function connect(
-        $id,
+        $key,
         $path,
         $action,
         $controller = null,
@@ -234,6 +234,6 @@ class Route
         $middleware = null,
         $validation = null
     ) {
-        return new static($id, $path, $action, $controller, $method, $middleware, $validation);
+        return new static($key, $path, $action, $controller, $method, $middleware, $validation);
     }
 }

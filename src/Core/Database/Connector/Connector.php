@@ -24,22 +24,22 @@ class Connector
     {
         try {
             $pdo = new PDO($dsn, $username, $password, $options);
-        } catch (Exception $e) {
-            $pdo = $this->tryAgainCreateConnectionLostConnection($e, $dsn, $username, $password, $options);
+        } catch (Exception $exception) {
+            $pdo = $this->tryAgainCreateConnectionLostConnection($exception, $dsn, $username, $password, $options);
         }
 
         return $pdo;
     }
 
     /**
-     * @param Exception $e
+     * @param Exception $exception
      * @return bool
      */
-    protected function isErrorLostConnection(Exception $e)
+    protected function isErrorLostConnection(Exception $exception)
     {
-        $message = $e->getMessage();
+        $message = $exception->getMessage();
 
-        $in_str = array(
+        $inStr = array(
             'server has gone away',
             'no connection to the server',
             'Lost connection',
@@ -53,20 +53,25 @@ class Connector
             'Resource deadlock avoided',
         );
 
-        return Stringy::create($message)->containsAny($in_str, false);
+        return Stringy::create($message)->containsAny($inStr, false);
     }
 
     /**
-     * @param Exception $e
+     * @param Exception $exception
      * @param $dsn
      * @param $username
      * @param $password
      * @param $options
      * @return PDO
      */
-    protected function tryAgainCreateConnectionLostConnection(Exception $e, $dsn, $username, $password, $options)
-    {
-        if ($this->isErrorLostConnection($e)) {
+    protected function tryAgainCreateConnectionLostConnection(
+        Exception $exception,
+        $dsn,
+        $username,
+        $password,
+        $options
+    ) {
+        if ($this->isErrorLostConnection($exception)) {
             return new PDO($dsn, $username, $password, $options);
         }
     }

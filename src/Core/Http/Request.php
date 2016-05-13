@@ -58,26 +58,6 @@ class Request extends BaseRequest
     }
 
     /**
-     * Return IP address client
-     *
-     * @return string
-     */
-    public function ip()
-    {
-        return $this->getClientIp();
-    }
-
-    /**
-     * Return IP address client
-     *
-     * @return array
-     */
-    public function ipAll()
-    {
-        return $this->getClientIps();
-    }
-
-    /**
      * Creates a new request with values from PHP's super globals.
      *
      * @return Request A new request
