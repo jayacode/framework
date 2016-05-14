@@ -33,9 +33,8 @@ class Response extends BaseResponse
 
     /**
      * Setup response 404
-     * @param string $path
      */
-    public function setNotFound($path)
+    public function setNotFound()
     {
         $this->setStatusCode(404);
     }

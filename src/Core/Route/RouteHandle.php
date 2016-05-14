@@ -67,7 +67,7 @@ class RouteHandle
         $route = $this->getRouteByPath($path, $method);
 
         if (!$this->tryHandleRequest($route)) {
-            $this->response->setNotFound($path);
+            $this->response->setNotFound();
         }
 
         return $this->response;
