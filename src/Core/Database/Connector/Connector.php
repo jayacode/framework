@@ -41,7 +41,7 @@ abstract class Connector
         try {
             return new PDO($dsn, $this->username, $this->password, $this->options);
         } catch (Exception $exception) {
-            return $this->tryAgainLostConnection($exception, $dsn, $config);
+            return $this->tryAgainLostConnection($exception, $dsn);
         }
     }
 
