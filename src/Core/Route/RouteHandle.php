@@ -106,7 +106,7 @@ class RouteHandle
     private function handleCallback(callable $func)
     {
         $content = call_user_func($func);
-        $this->response->setContent($content);
+        $this->response->setDataContent($content);
     }
 
     /**
@@ -130,7 +130,7 @@ class RouteHandle
         }
 
         $content = $controller->$actionMethod();
-        $this->response->setContent($content);
+        $this->response->setDataContent($content);
     }
 
     /**

@@ -13,7 +13,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
      */
     public function testResponseContent($expected, $content)
     {
-        $response = Response::create($content);
+        $response = Response::create();
+        $response->setDataContent($content);
 
         $this->assertEquals($expected, $response->getContent());
     }
