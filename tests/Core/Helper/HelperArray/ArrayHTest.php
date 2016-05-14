@@ -80,4 +80,14 @@ class ArrayHTest extends \PHPUnit_Framework_TestCase
             ),
         );
     }
+
+    public function testPushArray()
+    {
+        $arr = array("coba" => "coba");
+        $this->assertEquals(ArrayH::arrPush($arr, ["coba2"]), ["coba" => "coba", "coba2"]);
+
+        $arr = null;
+        $arr = array("coba" => "coba");
+        $this->assertEquals(arr_push($arr, ["coba2"]), ["coba" => "coba", "coba2"]);
+    }
 }

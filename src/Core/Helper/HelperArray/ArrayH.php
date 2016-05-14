@@ -58,4 +58,27 @@ class ArrayH
             $callback($prosArr[$nextPath]);
         }
     }
+
+    /**
+     * @param $arr
+     * @return array
+     */
+    public static function arrPush(&$arr)
+    {
+        foreach (func_get_args() as $arg) {
+            if (is_array($arg)) {
+                foreach ($arg as $key => $val) {
+                    if (!is_numeric($key)) {
+                        $arr[$key] = $val;
+                    } else {
+                        $arr[] = $val;
+                    }
+                }
+            } else {
+                $arr[] = $arg;
+            }
+        }
+
+        return $arr;
+    }
 }

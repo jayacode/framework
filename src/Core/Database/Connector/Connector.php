@@ -13,7 +13,7 @@ abstract class Connector
 {
     /**
      * Creates a PDO instance representing a connection to a database
-     * @param $dsn
+     * @param string $dsn
      * @param $config
      * @return PDO
      */
