@@ -5,6 +5,10 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
 
 /**
  * Class Query
+ * @property array where
+ * @property array columns
+ * @property mixed query
+ * @property null params
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -46,6 +50,7 @@ class Query
 
     /**
      * @param $queryStr
+     * @param $params
      * @return Query
      */
     public static function sql($queryStr, $params = null)

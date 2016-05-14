@@ -23,6 +23,7 @@ class GrammarMySql extends Grammar
             case Query::TYPE_QUERY:
                 return $this->query->query;
         }
+        return null;
     }
 
     /**
@@ -90,9 +91,7 @@ class GrammarMySql extends Grammar
             }
 
             if (is_array($arr)) {
-                $q = $q->append("`{$arr[0]}`");
-                $q = $q->append(" {$arr[1]} ");
-                $q = $q->append("?");
+                $q = $q->append("`{$arr[0]}` {$arr[1]} ?");
 
                 $this->params[] = $arr[2];
             }
