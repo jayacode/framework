@@ -26,7 +26,7 @@ abstract class Connector
         try {
             return new PDO($dsn, $username, $password, $options);
         } catch (Exception $exception) {
-            return $this->tryAgainLostConnection($exception, $dsn, $username, $password, $options);
+            return $this->tryAgainLostConnection($exception, $dsn, $config);
         }
     }
 
@@ -64,8 +64,13 @@ abstract class Connector
      */
     protected function tryAgainLostConnection(Exception $exception, $dsn, $config)
     {
+
+        $username = arr_get($config, "username");
+        $password = arr_get($config, "password");
+        $options = arr_get($config, "options", array());
+
         if ($this->isErrorLostConnection($exception)) {
-            return new PDO($dsn, $config["username"], $config["password"], $config["options"]);
+            return new PDO($dsn, $username, $password, $options);
         } else {
             throw $exception;
         }
