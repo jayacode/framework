@@ -12,6 +12,21 @@ use Stringy\Stringy;
 abstract class Connector
 {
     /**
+     * @var
+     */
+    protected $username;
+
+    /**
+     * @var
+     */
+    protected $password;
+
+    /**
+     * @var
+     */
+    protected $options;
+
+    /**
      * Creates a PDO instance representing a connection to a database
      * @param string $dsn
      * @param $config
@@ -19,12 +34,12 @@ abstract class Connector
      */
     public function createConnection($dsn, $config)
     {
-        $username = arr_get($config, "username");
-        $password = arr_get($config, "password");
-        $options = arr_get($config, "options", array());
+        $this->username = arr_get($config, "username");
+        $this->password = arr_get($config, "password");
+        $this->options = arr_get($config, "options", array());
 
         try {
-            return new PDO($dsn, $username, $password, $options);
+            return new PDO($dsn, $this->username, $this->password, $this->options);
         } catch (Exception $exception) {
             return $this->tryAgainLostConnection($exception, $dsn, $config);
         }
@@ -58,19 +73,14 @@ abstract class Connector
     /**
      * @param Exception $exception
      * @param $dsn
-     * @param $config
      * @return PDO
      * @throws Exception
      */
-    protected function tryAgainLostConnection(Exception $exception, $dsn, $config)
+    protected function tryAgainLostConnection(Exception $exception, $dsn)
     {
 
-        $username = arr_get($config, "username");
-        $password = arr_get($config, "password");
-        $options = arr_get($config, "options", array());
-
         if ($this->isErrorLostConnection($exception)) {
-            return new PDO($dsn, $username, $password, $options);
+            return new PDO($dsn, $this->username, $this->password, $this->options);
         } else {
             throw $exception;
         }
