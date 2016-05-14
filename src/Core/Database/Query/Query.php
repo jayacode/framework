@@ -9,6 +9,7 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
  * @property array columns
  * @property mixed query
  * @property null params
+ * @property null table
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -21,11 +22,6 @@ class Query
      *
      */
     const TYPE_SELECT = 'SELECT';
-
-    /**
-     * @var string
-     */
-    public $table;
 
     /**
      * @var array
@@ -71,6 +67,14 @@ class Query
     public static function table($table)
     {
         return new self($table);
+    }
+
+    /**
+     * @param $table
+     */
+    public function setTable($table)
+    {
+        $this->table = $table;
     }
 
     /**
