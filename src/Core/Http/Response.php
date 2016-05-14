@@ -38,6 +38,5 @@ class Response extends BaseResponse
     public function setNotFound($path)
     {
         $this->setStatusCode(404);
-        $this->setDataContent("not found : {$path}");
     }
 }
