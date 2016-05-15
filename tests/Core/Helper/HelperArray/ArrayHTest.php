@@ -81,13 +81,13 @@ class ArrayHTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testPushArray()
+    public function testMergeAllArray()
     {
         $arr = array("coba" => "coba");
-        $this->assertEquals(ArrayH::arrPush($arr, ["coba2"]), ["coba" => "coba", "coba2"]);
+        $this->assertEquals(ArrayH::arrMergeAll($arr, "coba2"), ["coba" => "coba", "coba2"]);
 
         $arr = null;
-        $arr = array("coba" => "coba");
-        $this->assertEquals(arr_push($arr, ["coba2"]), ["coba" => "coba", "coba2"]);
+        $arr = array("coba", "coba2");
+        $this->assertEquals(arr_merge_all($arr, ["coba3"]), ["coba3", "coba2"]);
     }
 }

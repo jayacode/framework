@@ -93,7 +93,7 @@ class GrammarMySql extends Grammar
             if (is_array($arr)) {
                 $q = $q->append($this->buildArrWhere($arr));
 
-                arr_push($this->params, $arr[2]);
+                array_push($this->params, $arr[2]);
             }
         }
 

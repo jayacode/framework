@@ -75,8 +75,13 @@ class Database
      */
     public function __construct($config)
     {
-        $this->config = array_merge($this->config, $config);
+        $options = isset($config["options"])?
+            arr_merge_all($this->config["options"], $config["options"])
+            :$this->config["options"];
 
+        $this->config = arr_merge_all($this->config, $config);
+
+        $this->config['options'] = $options;
         $this->initialize();
 
         $this->createConnection();

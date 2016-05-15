@@ -64,19 +64,16 @@ class ArrayH
     }
 
     /**
+     * merge all array, if it has the same key number, the value will override
      * @param $arr
      * @param $arr2
      * @return array
      */
-    public static function arrPush(&$arr, $arr2)
+    public static function arrMergeAll(&$arr, $arr2)
     {
         if (is_array($arr2)) {
             foreach ($arr2 as $key => $val) {
-                if (!is_numeric($key)) {
-                    $arr[$key] = $val;
-                } else {
-                    $arr[] = $val;
-                }
+                $arr[$key] = $val;
             }
         } else {
             $arr[] = $arr2;

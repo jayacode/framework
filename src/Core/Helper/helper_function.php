@@ -13,9 +13,16 @@ if (!function_exists("arr_get")) {
     {
         return ArrayH::get($arr, $path, $default);
     }
+}
 
-    function arr_push(&$arr, $arr2)
+if (!function_exists("arr_merge_all")) {
+    /**
+     * @param $arr
+     * @param $arr2
+     * @return array
+     */
+    function arr_merge_all(&$arr, $arr2)
     {
-        return ArrayH::arrPush($arr, $arr2);
+        return ArrayH::arrMergeAll($arr, $arr2);
     }
 }
