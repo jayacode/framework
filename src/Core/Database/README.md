@@ -109,6 +109,14 @@ $guest->name = "restu suhendar";
 $guest->save();
 ```
 
+### Deleting Models
+
+```php
+$guest = GuestBook::select()->where("id", 1)->first();
+
+$guest->delete();
+```
+
 ## Credits
 
 - [Restu Suhendar][link-author]
