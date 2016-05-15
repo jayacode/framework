@@ -98,6 +98,38 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
                     array("colVal")
                 ),
                 Query::table("foo")->select()->where("col", "colVal")->whereQ(Query::sql("(1=1)"))
+            ),
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` LIKE ?",
+                    array("colVal")
+                ),
+                Query::table("foo")->select()->like("col", "colVal")
+            ),
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? AND `col2` LIKE ?",
+                    array("colVal", "%colVal2%")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->like("col2", "%colVal2%")
+            ),
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? AND `col2` LIKE ?",
+                    array("colVal", "%colVal2%")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->andLike("col2", "%colVal2%")
+            ),
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? OR `col2` LIKE ?",
+                    array("colVal", "%colVal2%")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->orLike("col2", "%colVal2%")
             )
         );
     }

@@ -110,6 +110,17 @@ class Database
     }
 
     /**
+     * @param $query
+     * @param null $params
+     * @return $this
+     */
+    public function sql($query, $params = null)
+    {
+        $this->query = $this->query->sql($query, $params);
+        return $this;
+    }
+
+    /**
      * @param $table
      * @return $this
      */
@@ -174,6 +185,40 @@ class Database
     public function orWhere($column, $value, $operator = "=")
     {
         $this->query->orWhere($column, $value, $operator);
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @param string $type
+     * @return $this
+     */
+    public function like($column, $value, $type = "AND")
+    {
+        $this->query->like($column, $value, $type);
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @return $this
+     */
+    public function andLike($column, $value)
+    {
+        $this->query->andLike($column, $value);
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @return $this
+     */
+    public function orLike($column, $value)
+    {
+        $this->query->orLike($column, $value);
         return $this;
     }
 

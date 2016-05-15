@@ -137,6 +137,37 @@ class Query
     }
 
     /**
+     * @param $column
+     * @param $value
+     * @param string $type
+     * @return Query
+     */
+    public function like($column, $value, $type = "AND")
+    {
+        return $this->where($column, $value, "LIKE", $type);
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @return Query
+     */
+    public function andLike($column, $value)
+    {
+        return $this->like($column, $value);
+    }
+
+    /**
+     * @param $column
+     * @param $value
+     * @return Query
+     */
+    public function orLike($column, $value)
+    {
+        return $this->like($column, $value, "OR");
+    }
+
+    /**
      * @param Grammar $grammar
      * @return array
      */
