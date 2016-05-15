@@ -222,6 +222,24 @@ class Database
         return $this;
     }
 
+    public function between($column, $value, $type = "AND")
+    {
+        $this->query->between($column, $value, $type);
+        return $this;
+    }
+
+    public function andBetween($column, $value)
+    {
+        $this->query->andBetween($column, $value);
+        return $this;
+    }
+
+    public function orBetween($column, $value)
+    {
+        $this->query->orBetween($column, $value);
+        return $this;
+    }
+
     /**
      * @return $this
      * @throws \Exception

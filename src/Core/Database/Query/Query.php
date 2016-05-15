@@ -167,6 +167,25 @@ class Query
         return $this->like($column, $value, "OR");
     }
 
+    public function between($column, $value = array(), $type = "AND")
+    {
+        if (count($value) != 2) {
+            throw new \OutOfBoundsException();
+        }
+
+        return $this->where($column, $value, "BETWEEN", $type);
+    }
+
+    public function andBetween($column, $value = array())
+    {
+        return $this->between($column, $value);
+    }
+
+    public function orBetween($column, $value)
+    {
+        return $this->between($column, $value, "OR");
+    }
+
     /**
      * @param Grammar $grammar
      * @return array

@@ -83,7 +83,7 @@ class GrammarMySql extends Grammar
             $arr = $where[1];
 
             if ($q->count() > 1) {
-                $q = $q->append(" {$type} ");
+                $q = $q->append(" {$this->getSeparatorWhereGrammar($type)} ");
             }
 
             if (is_string($arr)) {
@@ -91,12 +91,26 @@ class GrammarMySql extends Grammar
             }
 
             if (is_array($arr)) {
-                $q = $q->append("`{$arr[0]}` {$arr[1]} ?");
+                $q = $q->append($this->buildArrWhere($arr));
 
-                $this->params[] = $arr[2];
+                arr_push($this->params, $arr[2]);
             }
         }
 
         return $q->count()?$q->prepend(" WHERE ")->__toString():"";
+    }
+
+    private function buildArrWhere($arr)
+    {
+        if (count($arr) != 3) {
+            throw new \OutOfBoundsException();
+        }
+
+        switch ($arr[1]) {
+            case "BETWEEN":
+                return "`{$arr[0]}` {$arr[1]} ? AND ?";
+            default:
+                return "`{$arr[0]}` {$arr[1]} ?";
+        }
     }
 }
