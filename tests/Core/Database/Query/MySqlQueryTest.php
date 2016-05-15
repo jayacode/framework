@@ -146,6 +146,14 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
                     array("colVal", "colVal2", "idVal")
                 ),
                 Query::table("foo")->update(array("col1" => "colVal", "col2" => "colVal2"))->where("id", "idVal")
+            ),
+
+            array(
+                array(
+                    "DELETE FROM `foo` WHERE `id` = ?",
+                    array("idVal")
+                ),
+                Query::table("foo")->delete()->where("id", "idVal")
             )
         );
     }

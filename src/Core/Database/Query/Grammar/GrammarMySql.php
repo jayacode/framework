@@ -26,6 +26,9 @@ class GrammarMySql extends Grammar
             case Query::TYPE_UPDATE:
                 return $this->update();
 
+            case Query::TYPE_DELETE:
+                return $this->delete();
+
             case Query::TYPE_QUERY:
                 return $this->query->query;
         }
@@ -152,7 +155,7 @@ class GrammarMySql extends Grammar
     }
 
     /**
-     *
+     * @return string
      */
     private function update()
     {
@@ -167,6 +170,18 @@ class GrammarMySql extends Grammar
         }
         $this->queryString .= join(", ", $arrSet);
 
+        $this->queryString .= $this->where();
+
+        return $this->queryString;
+    }
+
+    /**
+     * @return string
+     */
+    private function delete()
+    {
+        $table = $this->query->table;
+        $this->queryString = "DELETE FROM {$this->getFormattedTableOrColumn($table)}";
         $this->queryString .= $this->where();
 
         return $this->queryString;

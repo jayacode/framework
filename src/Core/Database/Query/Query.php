@@ -34,6 +34,11 @@ class Query
     const TYPE_UPDATE = 'UPDATE';
 
     /**
+     *
+     */
+    const TYPE_DELETE = 'DELETE';
+
+    /**
      * @var string
      */
     public $table;
@@ -125,6 +130,12 @@ class Query
         $this->type = Query::TYPE_UPDATE;
         $this->initColVal($columnsVal);
 
+        return $this;
+    }
+
+    public function delete()
+    {
+        $this->type = Query::TYPE_DELETE;
         return $this;
     }
 

@@ -82,36 +82,44 @@ abstract class Model
     }
 
     /**
-     *
+     * @return bool
+     * @throws \Exception
      */
     public function delete()
     {
-        //TODO: will be implemented after query builder delete finish
+        static::$db->setModel(get_class(new static()), static::$table);
+        if (static::$db->delete($this->primaryKey, $this->data[$this->primaryKey])) {
+            $this->isNewRow = true;
+            return true;
+        }
+        return false;
     }
 
     /**
-     * INSERT AND UPDATE Model
+     * @return bool|mixed
+     * @throws \Exception
      */
     public function save()
     {
 
         static::$db->setModel(get_class(new static()), static::$table);
-        if ($this->isNewRow && static::$db->insert($this->data, true)) {
-            $this->isNewRow = false;
+        if ($this->isNewRow) {
+            if (static::$db->insert($this->data, true)) {
+                $this->isNewRow = false;
 
-            if ($lastInsertID = static::$db->lastInsertId()) {
-                $newData = static::$db->table(static::$table)
-                    ->select()
-                    ->where($this->primaryKey, $lastInsertID)
-                    ->first();
+                if ($lastInsertID = static::$db->lastInsertId()) {
+                    $newData = static::$db->table(static::$table)
+                        ->select()
+                        ->where($this->primaryKey, $lastInsertID)
+                        ->first();
 
-                $this->data = is_array($newData)?$newData:$this->data;
+                    $this->data = is_array($newData)?$newData:$this->data;
+                }
+                return true;
             }
-            return true;
+            return false;
         } else {
             return static::$db->update($this->data, $this->primaryKey);
         }
-
-        return false;
     }
 }

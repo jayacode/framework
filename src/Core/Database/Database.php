@@ -154,7 +154,7 @@ class Database
     /**
      * @param array $columnsVal
      * @param bool $runExecute
-     * @return $this | bool
+     * @return mixed
      */
     public function insert(array $columnsVal, $runExecute = false)
     {
@@ -173,7 +173,7 @@ class Database
     /**
      * @param array $columnsVal
      * @param null $primaryKey
-     * @return $this|bool
+     * @return mixed
      */
     public function update(array $columnsVal, $primaryKey = null)
     {
@@ -191,6 +191,26 @@ class Database
 
         $this->query->update($columnsVal);
 
+        return $this;
+    }
+
+    /**
+     * @param null $primaryKey
+     * @param null $primaryKeyVal
+     * @return mixed
+     */
+    public function delete($primaryKey = null, $primaryKeyVal = null)
+    {
+        if ($primaryKey && $primaryKeyVal) {
+            $this->query->delete()->where($primaryKey, $primaryKeyVal);
+
+            $status = $this->execute();
+            $this->clear();
+
+            return $status;
+        }
+
+        $this->query->delete();
         return $this;
     }
 
