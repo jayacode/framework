@@ -74,9 +74,9 @@ class GuestBook extends \JayaCode\Framework\Core\Database\Model\Model
 ```php
 GuestBook::$db = $db;
 
-$mr = GuestBook::select()->like("name", "Mr.%");
-while ($guest = $mr->get()) {
-    echo $guest->name;
+$mr = GuestBook::select()->like("name", "Mr.%")->first();
+if ($mr) {
+    echo $mr->name;
 }
 
 // get all data

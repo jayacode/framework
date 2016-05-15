@@ -286,11 +286,14 @@ class Database
     {
         $this->executeIfNotAlreadyExecutedPreviously();
 
-        if ($this->model && class_exists($this->model)) {
+        if ($this->model) {
             $dataModel = array();
-            while ($data = $this->statement->fetch()) {
-                $dataModel[] = new $this->model($data, false);
+            while ($model = $this->get()) {
+                $dataModel[] = $model;
             }
+
+            $this->clear();
+
             return $dataModel;
         }
         return $this->statement->fetchAll();
@@ -298,13 +301,24 @@ class Database
 
     /**
      * @return mixed
+     */
+    public function first()
+    {
+        // TODO: use limit after query builder limit finish
+        $data = $this->get();
+        $this->clear();
+        return $data;
+    }
+
+    /**
+     * @return mixed
      * @throws \Exception
      */
-    public function get()
+    protected function get()
     {
         $this->executeIfNotAlreadyExecutedPreviously();
 
-        if ($this->model && class_exists($this->model)) {
+        if ($this->model) {
             $data = $this->statement->fetch();
             return $data?new $this->model($data, false):$data;
         }
@@ -328,7 +342,17 @@ class Database
     public function clear()
     {
         $this->statement = null;
+        $this->clearUsingModel();
+
         $this->query->clear();
+    }
+
+    /**
+     *
+     */
+    public function clearUsingModel()
+    {
+        $this->model = null;
     }
 
     /**
@@ -342,9 +366,14 @@ class Database
     /**
      * @param string $model
      * @param null $table
+     * @throws \Exception
      */
     public function setModel($model, $table = null)
     {
+        if (!class_exists($model)) {
+            throw new \Exception("class {$model} is not exist");
+        }
+
         $this->clear();
 
         if ($table) {
