@@ -14,12 +14,11 @@ $ composer require jayacode/database
 ``` php
 <?php
 use JayaCode\Framework\Core\Database\Database;
-use JayaCode\Framework\Core\Database\Query\Grammar\GrammarMySql;
 
 require_once("vendor/autoload.php");
 
 $db = Database::create([
-    "grammar" => GrammarMySql::class,
+    "driver" => "mysql",
 
     "host" => "localhost",
     "username" => "root",
@@ -32,8 +31,18 @@ $db = Database::create([
 $db = $db->table("guestbook")->select()->where("name", "restu"); 
 // SELECT * FROM `guestbook` WHERE `name` = 'restu'
 
-$db->all();
+/**
+ * get all data
+ */
 
+$db->execute()->all();
+
+// OR
+
+$db->execute();
+while ($data = $db->get()) {
+    $data;
+}
 ```
 
 ## Credits
