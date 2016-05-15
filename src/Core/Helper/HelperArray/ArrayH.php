@@ -61,22 +61,21 @@ class ArrayH
 
     /**
      * @param $arr
+     * @param $arr2
      * @return array
      */
-    public static function arrPush(&$arr)
+    public static function arrPush(&$arr, $arr2)
     {
-        foreach (func_get_args() as $arg) {
-            if (is_array($arg)) {
-                foreach ($arg as $key => $val) {
-                    if (!is_numeric($key)) {
-                        $arr[$key] = $val;
-                    } else {
-                        $arr[] = $val;
-                    }
+        if (is_array($arr2)) {
+            foreach ($arr2 as $key => $val) {
+                if (!is_numeric($key)) {
+                    $arr[$key] = $val;
+                } else {
+                    $arr[] = $val;
                 }
-            } else {
-                $arr[] = $arg;
             }
+        } else {
+            $arr[] = $arr2;
         }
 
         return $arr;
