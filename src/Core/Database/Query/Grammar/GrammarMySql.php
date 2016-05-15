@@ -83,7 +83,7 @@ class GrammarMySql extends Grammar
             $arr = $where[1];
 
             if ($q->count() > 1) {
-                $q = $q->append(" {$this->getSeparatorWhereGrammar($type)} ");
+                $q = $q->append(" {$type} ");
             }
 
             if (is_string($arr)) {
