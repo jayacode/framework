@@ -56,5 +56,5 @@ The MIT License (MIT). Please see [License File](LICENSE.md) for more informatio
 [link-scrutinizer]: https://scrutinizer-ci.com/g/jayacode/framework/code-structure
 [link-code-quality]: https://scrutinizer-ci.com/g/jayacode/framework
 [link-downloads]: https://packagist.org/packages/jayacode/framework
-[link-author]: https://github.com/jayacode
+[link-author]: https://github.com/aarestu
 [link-contributors]: ../../contributors
