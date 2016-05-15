@@ -17,9 +17,13 @@ class ArrayH
      * @param $path
      * @param null $default
      * @return null
+     * @throws \Exception
      */
     public static function get($arr, $path, $default = null)
     {
+        if (!is_array($arr) || !isset($arr)) {
+            throw new \Exception("Argument 1 passed to arr_get must be of the type array");
+        }
         $val = $default;
         self::exploreAtPath($arr, $path, function (&$prosArr) use (&$val) {
             $val = $prosArr;
