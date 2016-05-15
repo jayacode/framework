@@ -92,10 +92,20 @@ foreach ($guests as $guest) {
 ```
 
 ### Inserting Models
+
 ```php
 $guest = new GuestBook();
-$guest->name = "restu";
 
+$guest->name = "restu";
+$guest->save();
+```
+
+### Updating Models
+
+```php
+$guest = GuestBook::select()->where("id", 1)->first();
+
+$guest->name = "restu suhendar";
 $guest->save();
 ```
 

@@ -23,6 +23,9 @@ class GrammarMySql extends Grammar
             case Query::TYPE_INSERT:
                 return $this->insert();
 
+            case Query::TYPE_UPDATE:
+                return $this->update();
+
             case Query::TYPE_QUERY:
                 return $this->query->query;
         }
@@ -138,14 +141,36 @@ class GrammarMySql extends Grammar
         $this->queryString .= " VALUES(";
 
         $params = array();
-        for ($i=0; count($this->query->columns) > $i; $i++) {
-             $params[] = "?";
+
+        for ($i=0, $c=count($this->query->columns); $i<$c; $i++) {
+            $params[$i] = "?";
         }
+
         $this->queryString .= join(', ', $params).")";
 
         return $this->queryString;
     }
 
+    /**
+     *
+     */
+    private function update()
+    {
+        $this->params = $this->query->values;
+
+        $table = $this->query->table;
+        $this->queryString = "UPDATE {$this->getFormattedTableOrColumn($table)} SET ";
+
+        $arrSet = array();
+        foreach ($this->query->columns as $column) {
+            $arrSet[] = "{$this->getFormattedTableOrColumn($column)} = ?";
+        }
+        $this->queryString .= join(", ", $arrSet);
+
+        $this->queryString .= $this->where();
+
+        return $this->queryString;
+    }
 
     /**
      * @param null $str

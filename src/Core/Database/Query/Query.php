@@ -29,6 +29,11 @@ class Query
     const TYPE_INSERT = 'INSERT';
 
     /**
+     *
+     */
+    const TYPE_UPDATE = 'UPDATE';
+
+    /**
      * @var string
      */
     public $table;
@@ -104,9 +109,22 @@ class Query
      */
     public function insert(array $columnsVal)
     {
-        $this->attributes['columns'] = array_keys($columnsVal);
-        $this->attributes['values'] = array_values($columnsVal);
         $this->type = Query::TYPE_INSERT;
+        $this->initColVal($columnsVal);
+
+        return $this;
+    }
+
+
+    /**
+     * @param $columnsVal
+     * @return $this
+     */
+    public function update($columnsVal)
+    {
+        $this->type = Query::TYPE_UPDATE;
+        $this->initColVal($columnsVal);
+
         return $this;
     }
 
@@ -282,5 +300,15 @@ class Query
     public function setType($type)
     {
         $this->type = $type;
+    }
+
+    /**
+     * init col and val to attributes
+     * @param $columnsVal
+     */
+    public function initColVal($columnsVal)
+    {
+        $this->attributes['columns'] = array_keys($columnsVal);
+        $this->attributes['values'] = array_values($columnsVal);
     }
 }

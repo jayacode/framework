@@ -138,6 +138,14 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
                     array("colVal", "colVal2")
                 ),
                 Query::table("foo")->insert(array("col1" => "colVal", "col2" => "colVal2"))
+            ),
+
+            array(
+                array(
+                    "UPDATE `foo` SET `col1` = ?, `col2` = ? WHERE `id` = ?",
+                    array("colVal", "colVal2", "idVal")
+                ),
+                Query::table("foo")->update(array("col1" => "colVal", "col2" => "colVal2"))->where("id", "idVal")
             )
         );
     }

@@ -153,16 +153,45 @@ class Database
 
     /**
      * @param array $columnsVal
-     * @return bool
+     * @param bool $runExecute
+     * @return $this | bool
      */
-    public function insert(array $columnsVal)
+    public function insert(array $columnsVal, $runExecute = false)
     {
         $this->query->insert($columnsVal);
 
-        $status = $this->execute();
-        $this->clear();
+        if ($runExecute) {
+            $status = $this->execute();
+            $this->clear();
 
-        return $status;
+            return $status;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param array $columnsVal
+     * @param null $primaryKey
+     * @return $this|bool
+     */
+    public function update(array $columnsVal, $primaryKey = null)
+    {
+        if ($primaryKey) {
+            $keyVal = $columnsVal[$primaryKey];
+            $columnsVal = arr_exclude($columnsVal, [$primaryKey]);
+
+            $this->query->update($columnsVal)->where($primaryKey, $keyVal);
+
+            $status = $this->execute();
+            $this->clear();
+
+            return $status;
+        }
+
+        $this->query->update($columnsVal);
+
+        return $this;
     }
 
     /**

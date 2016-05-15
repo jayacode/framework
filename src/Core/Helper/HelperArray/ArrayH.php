@@ -13,13 +13,13 @@ class ArrayH
     public static $pathSeparator = ".";
 
     /**
-     * @param $arr
+     * @param array $arr
      * @param $path
      * @param null $default
      * @return null
      * @throws \Exception
      */
-    public static function get($arr, $path, $default = null)
+    public static function get(array $arr, $path, $default = null)
     {
         if (!is_array($arr) || !isset($arr)) {
             throw new \Exception("Argument 1 passed to arr_get must be of the type array");
@@ -65,11 +65,11 @@ class ArrayH
 
     /**
      * merge all array, if it has the same key number, the value will override
-     * @param $arr
+     * @param array $arr
      * @param $arr2
      * @return array
      */
-    public static function arrMergeAll(&$arr, $arr2)
+    public static function arrMergeAll(array &$arr, $arr2)
     {
         if (is_array($arr2)) {
             foreach ($arr2 as $key => $val) {
@@ -80,5 +80,22 @@ class ArrayH
         }
 
         return $arr;
+    }
+
+    /**
+     * Return all array elements except for a given key
+     * @param array $arr
+     * @param array $excludeKeys
+     * @return array
+     */
+    public static function arrExclude(array $arr, array $excludeKeys)
+    {
+        $result = [];
+        foreach ($arr as $key => $val) {
+            if (!in_array($key, $excludeKeys)) {
+                $result[$key] = $val;
+            }
+        }
+        return $result;
     }
 }

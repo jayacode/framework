@@ -90,22 +90,13 @@ abstract class Model
     }
 
     /**
-     *
-     */
-    public function update()
-    {
-        //TODO: will be implemented after query builder update finish
-    }
-
-    /**
-     *
+     * INSERT AND UPDATE Model
      */
     public function save()
     {
-        //TODO: will be implemented after query builder insert & update finish
 
         static::$db->setModel(get_class(new static()), static::$table);
-        if ($this->isNewRow && static::$db->insert($this->data)) {
+        if ($this->isNewRow && static::$db->insert($this->data, true)) {
             $this->isNewRow = false;
 
             if ($lastInsertID = static::$db->lastInsertId()) {
@@ -114,10 +105,13 @@ abstract class Model
                     ->where($this->primaryKey, $lastInsertID)
                     ->first();
 
-                $this->data = $newData?$newData:$this->data;
+                $this->data = is_array($newData)?$newData:$this->data;
             }
+            return true;
+        } else {
+            return static::$db->update($this->data, $this->primaryKey);
         }
 
-        return $this;
+        return false;
     }
 }
