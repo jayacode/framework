@@ -130,6 +130,14 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
                     array("colVal", "%colVal2%")
                 ),
                 Query::table("foo")->select()->where("col", "colVal")->orLike("col2", "%colVal2%")
+            ),
+
+            array(
+                array(
+                    "INSERT INTO `foo`(`col1`, `col2`) VALUES(?, ?)",
+                    array("colVal", "colVal2")
+                ),
+                Query::table("foo")->insert(array("col1" => "colVal", "col2" => "colVal2"))
             )
         );
     }

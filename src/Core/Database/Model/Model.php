@@ -103,5 +103,21 @@ abstract class Model
     public function save()
     {
         //TODO: will be implemented after query builder insert & update finish
+
+        static::$db->setModel(get_class(new static()), static::$table);
+        if ($this->isNewRow && static::$db->insert($this->data)) {
+            $this->isNewRow = false;
+
+            if ($lastInsertID = static::$db->lastInsertId()) {
+                $newData = static::$db->table(static::$table)
+                    ->select()
+                    ->where($this->primaryKey, $lastInsertID)
+                    ->first();
+
+                $this->data = $newData?$newData:$this->data;
+            }
+        }
+
+        return $this;
     }
 }

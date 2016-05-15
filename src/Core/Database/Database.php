@@ -3,6 +3,7 @@ namespace JayaCode\Framework\Core\Database;
 
 use JayaCode\Framework\Core\Database\Connector\Connector;
 use JayaCode\Framework\Core\Database\Connector\ConnectorMySql;
+use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
 use JayaCode\Framework\Core\Database\Query\Grammar\GrammarMySql;
 use JayaCode\Framework\Core\Database\Query\Query;
 use PDO;
@@ -34,7 +35,7 @@ class Database
     protected $query;
 
     /**
-     * @var
+     * @var Grammar
      */
     protected $grammar;
 
@@ -148,6 +149,20 @@ class Database
     {
         $this->query->select($columns);
         return $this;
+    }
+
+    /**
+     * @param array $columnsVal
+     * @return bool
+     */
+    public function insert(array $columnsVal)
+    {
+        $this->query->insert($columnsVal);
+
+        $status = $this->execute();
+        $this->clear();
+
+        return $status;
     }
 
     /**
@@ -267,8 +282,7 @@ class Database
     }
 
     /**
-     * @return $this
-     * @throws \Exception
+     * @return bool
      */
     public function execute()
     {
@@ -276,11 +290,7 @@ class Database
 
         $this->statement = $this->pdo->prepare($qArr[0]);
 
-        if (!$this->statement->execute($qArr[1])) {
-            throw new \Exception(join(". ", $this->statement->errorInfo()));
-        }
-
-        return $this;
+        return $this->statement->execute($qArr[1]);
     }
 
     /**
@@ -350,6 +360,7 @@ class Database
         $this->clearUsingModel();
 
         $this->query->clear();
+        $this->grammar->clear();
     }
 
     /**
@@ -379,11 +390,17 @@ class Database
             throw new \Exception("class {$model} is not exist");
         }
 
-        $this->clear();
-
         if ($table) {
             $this->table($table);
         }
         $this->model = $model;
+    }
+
+    /**
+     * @return string
+     */
+    public function lastInsertId()
+    {
+        return $this->pdo->lastInsertId();
     }
 }

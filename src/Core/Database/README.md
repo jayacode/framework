@@ -63,19 +63,23 @@ $db = Database::create([
 // ...
 ```
 
-### Model
+### Class Model
+
 ```php
 class GuestBook extends \JayaCode\Framework\Core\Database\Model\Model
 {
     protected static $table = "guestbook";
 }
+
+GuestBook::$db = $db;
 ```
 
-```php
-GuestBook::$db = $db;
+### Retrieving Models
 
+```php
 $mr = GuestBook::select()->like("name", "Mr.%")->first();
 if ($mr) {
+    // Accessing Column Values
     echo $mr->name;
 }
 
@@ -85,6 +89,14 @@ $guests = GuestBook::select()->all();
 foreach ($guests as $guest) {
     echo $guest->name;
 }
+```
+
+### Inserting Models
+```php
+$guest = new GuestBook();
+$guest->name = "restu";
+
+$guest->save();
 ```
 
 ## Credits

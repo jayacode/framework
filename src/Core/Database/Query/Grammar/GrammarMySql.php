@@ -20,6 +20,9 @@ class GrammarMySql extends Grammar
             case Query::TYPE_SELECT:
                 return $this->select();
 
+            case Query::TYPE_INSERT:
+                return $this->insert();
+
             case Query::TYPE_QUERY:
                 return $this->query->query;
         }
@@ -35,7 +38,8 @@ class GrammarMySql extends Grammar
 
         $this->queryString .= $this->selectColumn();
 
-        $this->queryString .= " FROM `{$this->query->table}`";
+        $table = $this->query->table;
+        $this->queryString .= " FROM {$this->getFormattedTableOrColumn($table)}";
 
         $this->queryString .= $this->where();
 
@@ -60,7 +64,7 @@ class GrammarMySql extends Grammar
             if ($columns[$key] instanceof Query) {
                 $columns[$key] = $columns[$key]->query;
             } else {
-                $columns[$key] = "`{$val}`";
+                $columns[$key] = $this->getFormattedTableOrColumn($val);
             }
         }
 
@@ -93,7 +97,7 @@ class GrammarMySql extends Grammar
             if (is_array($arr)) {
                 $q = $q->append($this->buildArrWhere($arr));
 
-                array_push($this->params, $arr[2]);
+                $this->params[] = $arr[2];
             }
         }
 
@@ -116,5 +120,46 @@ class GrammarMySql extends Grammar
             default:
                 return "`{$arr[0]}` {$arr[1]} ?";
         }
+    }
+
+    /**
+     * @return string
+     */
+    private function insert()
+    {
+
+        $this->params = $this->query->values;
+
+        $table = $this->query->table;
+        $this->queryString = "INSERT INTO {$this->getFormattedTableOrColumn($table)}";
+
+        $this->queryString .= "({$this->selectColumn()})";
+
+        $this->queryString .= " VALUES(";
+
+        $params = array();
+        for ($i=0; count($this->query->columns) > $i; $i++) {
+             $params[] = "?";
+        }
+        $this->queryString .= join(', ', $params).")";
+
+        return $this->queryString;
+    }
+
+
+    /**
+     * @param null $str
+     * @return null|string
+     */
+    private function getFormattedTableOrColumn($str = null)
+    {
+        $tmpStr = $str?$str:$this->query->table;
+        $strArr = explode(".", $tmpStr);
+
+        foreach ($strArr as $key => $val) {
+            $strArr[$key] = "`{$val}`";
+        }
+
+        return join(".", $strArr);
     }
 }

@@ -52,4 +52,20 @@ abstract class Grammar
     {
         return $this->params;
     }
+
+    /**
+     * @param array $params
+     */
+    public function setParams($params)
+    {
+        $this->params = $params;
+    }
+
+    /**
+     *
+     */
+    public function clear()
+    {
+        $this->params = array();
+    }
 }

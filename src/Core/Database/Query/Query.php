@@ -9,6 +9,7 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
  * @property array columns
  * @property mixed query
  * @property null params
+ * @property array values
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -21,6 +22,11 @@ class Query
      *
      */
     const TYPE_SELECT = 'SELECT';
+
+    /**
+     *
+     */
+    const TYPE_INSERT = 'INSERT';
 
     /**
      * @var string
@@ -88,7 +94,19 @@ class Query
     public function select($columns = null)
     {
         $this->attributes['columns'] = $columns;
-        $this->type = "SELECT";
+        $this->type = Query::TYPE_SELECT;
+        return $this;
+    }
+
+    /**
+     * @param array $columnsVal
+     * @return $this
+     */
+    public function insert(array $columnsVal)
+    {
+        $this->attributes['columns'] = array_keys($columnsVal);
+        $this->attributes['values'] = array_values($columnsVal);
+        $this->type = Query::TYPE_INSERT;
         return $this;
     }
 
@@ -215,7 +233,10 @@ class Query
         $grammar->setQuery($this);
 
         $queryStr = $grammar->build();
-        $queryParams = isset($this->attributes['params'])?$this->attributes['params']:$grammar->getParams();
+
+        $queryParams = isset($this->attributes['params']) && !empty($this->attributes['params'])?
+            $this->attributes['params']
+            :$grammar->getParams();
 
         return [$queryStr, $queryParams];
     }
@@ -226,6 +247,7 @@ class Query
     public function clear()
     {
         $this->attributes = array();
+        $this->params = array();
     }
 
     /**
