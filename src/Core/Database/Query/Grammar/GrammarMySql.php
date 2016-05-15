@@ -100,6 +100,10 @@ class GrammarMySql extends Grammar
         return $q->count()?$q->prepend(" WHERE ")->__toString():"";
     }
 
+    /**
+     * @param $arr
+     * @return string
+     */
     private function buildArrWhere($arr)
     {
         if (count($arr) != 3) {
