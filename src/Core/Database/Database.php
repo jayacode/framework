@@ -284,9 +284,7 @@ class Database
      */
     public function all()
     {
-        if (!$this->statement) {
-            $this->execute();
-        }
+        $this->executeIfNotAlreadyExecutedPreviously();
 
         if ($this->model && class_exists($this->model)) {
             $dataModel = array();
@@ -304,9 +302,7 @@ class Database
      */
     public function get()
     {
-        if (!$this->statement) {
-            $this->execute();
-        }
+        $this->executeIfNotAlreadyExecutedPreviously();
 
         if ($this->model && class_exists($this->model)) {
             $data = $this->statement->fetch();
@@ -314,6 +310,16 @@ class Database
         }
 
         return $this->statement->fetch();
+    }
+
+    /**
+     * @throws \Exception
+     */
+    protected function executeIfNotAlreadyExecutedPreviously()
+    {
+        if (!$this->statement) {
+            $this->execute();
+        }
     }
 
     /**
