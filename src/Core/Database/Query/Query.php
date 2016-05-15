@@ -9,7 +9,6 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
  * @property array columns
  * @property mixed query
  * @property null params
- * @property null table
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -22,6 +21,11 @@ class Query
      *
      */
     const TYPE_SELECT = 'SELECT';
+
+    /**
+     * @var string
+     */
+    public $table;
 
     /**
      * @var array
@@ -167,6 +171,12 @@ class Query
         return $this->like($column, $value, "OR");
     }
 
+    /**
+     * @param $column
+     * @param array $value
+     * @param string $type
+     * @return Query
+     */
     public function between($column, $value = array(), $type = "AND")
     {
         if (count($value) != 2) {
@@ -176,11 +186,21 @@ class Query
         return $this->where($column, $value, "BETWEEN", $type);
     }
 
+    /**
+     * @param $column
+     * @param array $value
+     * @return Query
+     */
     public function andBetween($column, $value = array())
     {
         return $this->between($column, $value);
     }
 
+    /**
+     * @param $column
+     * @param $value
+     * @return Query
+     */
     public function orBetween($column, $value)
     {
         return $this->between($column, $value, "OR");
@@ -198,6 +218,14 @@ class Query
         $queryParams = isset($this->attributes['params'])?$this->attributes['params']:$grammar->getParams();
 
         return [$queryStr, $queryParams];
+    }
+
+    /**
+     * Clear Query Builder
+     */
+    public function clear()
+    {
+        $this->attributes = array();
     }
 
     /**

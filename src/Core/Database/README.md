@@ -45,6 +45,48 @@ while ($data = $db->get()) {
 }
 ```
 
+### Create Connection
+```php
+// ...
+
+$db = Database::create([
+    "driver" => "mysql",
+
+    "host" => "localhost",
+    "username" => "root",
+    "password" => "",
+
+    "dbname" => "test",
+    "options" => []
+]);
+
+// ...
+```
+
+### Model
+```php
+class GuestBook extends \JayaCode\Framework\Core\Database\Model\Model
+{
+    protected static $table = "guestbook";
+}
+```
+
+```php
+GuestBook::$db = $db;
+
+$mr = GuestBook::select()->like("name", "Mr.%")->get();
+while ($guest = $mr) {
+    echo $guest->name;
+}
+
+// get all data
+$guests = GuestBook::select()->all();
+
+foreach ($guests as $guest) {
+    echo $guest->name;
+}
+```
+
 ## Credits
 
 - [Restu Suhendar][link-author]

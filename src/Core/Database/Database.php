@@ -66,6 +66,11 @@ class Database
     ];
 
     /**
+     * @var string
+     */
+    protected $model = null;
+
+    /**
      * @param $config
      */
     public function __construct($config)
@@ -222,18 +227,34 @@ class Database
         return $this;
     }
 
+    /**
+     * @param $column
+     * @param $value
+     * @param string $type
+     * @return $this
+     */
     public function between($column, $value, $type = "AND")
     {
         $this->query->between($column, $value, $type);
         return $this;
     }
 
+    /**
+     * @param $column
+     * @param $value
+     * @return $this
+     */
     public function andBetween($column, $value)
     {
         $this->query->andBetween($column, $value);
         return $this;
     }
 
+    /**
+     * @param $column
+     * @param $value
+     * @return $this
+     */
     public function orBetween($column, $value)
     {
         $this->query->orBetween($column, $value);
@@ -266,6 +287,14 @@ class Database
         if (!$this->statement) {
             $this->execute();
         }
+
+        if ($this->model && class_exists($this->model)) {
+            $dataModel = array();
+            while ($data = $this->statement->fetch()) {
+                $dataModel[] = new $this->model($data, false);
+            }
+            return $dataModel;
+        }
         return $this->statement->fetchAll();
     }
 
@@ -278,6 +307,43 @@ class Database
         if (!$this->statement) {
             $this->execute();
         }
+
+        if ($this->model && class_exists($this->model)) {
+            $data = $this->statement->fetch();
+            return $data?new $this->model($data, false):$data;
+        }
+
         return $this->statement->fetch();
+    }
+
+    /**
+     * Clear statement PDO and query builder
+     */
+    public function clear()
+    {
+        $this->statement = null;
+        $this->query->clear();
+    }
+
+    /**
+     * @return string
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * @param string $model
+     * @param null $table
+     */
+    public function setModel($model, $table = null)
+    {
+        $this->clear();
+
+        if ($table) {
+            $this->table($table);
+        }
+        $this->model = $model;
     }
 }
