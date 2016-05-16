@@ -18,7 +18,7 @@ class Session extends SessionBase
 
     public function initFlash()
     {
-        $this->flash = $this->get("flash", array());
+        $this->flash = (array) $this->get("flash", array());
         $this->set("flash", array());
     }
 

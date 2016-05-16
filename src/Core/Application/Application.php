@@ -5,6 +5,7 @@ use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 use JayaCode\Framework\Core\Route\RouteHandle;
 use JayaCode\Framework\Core\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 /**
  * Class Application
@@ -34,27 +35,30 @@ class Application
 
     /**
      * Application constructor.
+     * @param SessionStorageInterface $storage
      */
-    public function __construct()
+    public function __construct(SessionStorageInterface $storage = null)
     {
-        $this->initialize();
+        $this->initialize($storage);
     }
 
     /**
      * Create Application object from static function
+     * @param SessionStorageInterface $storage
      * @return Application
      */
-    public static function create()
+    public static function create(SessionStorageInterface $storage = null)
     {
-        return new static();
+        return new static($storage);
     }
 
     /**
      * initialize Application
+     * @param SessionStorageInterface $storage
      */
-    public function initialize()
+    public function initialize(SessionStorageInterface $storage = null)
     {
-        $this->session = new Session();
+        $this->session = new Session($storage);
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
@@ -62,7 +66,7 @@ class Application
         $this->request = Request::createFromSymfonyGlobal($this->session);
 
         $this->response = Response::create();
-        $this->routeHandle = RouteHandle::create($this->request, $this->response);
+        $this->routeHandle = RouteHandle::create($this);
 
         $this->setTimeZone();
     }
@@ -79,6 +83,8 @@ class Application
     {
         $this->routeHandle->handle();
         $this->response->send();
+
+        $this->terminate();
     }
 
     /**
@@ -133,5 +139,7 @@ class Application
         $this->session->setFlash("old", $inputs);
 
         $this->request->getSession()->terminate();
+
+        exit();
     }
 }

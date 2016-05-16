@@ -1,8 +1,10 @@
 <?php
 namespace JayaCode\Framework\Core\Controller;
 
+use JayaCode\Framework\Core\Application\Application;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
+use JayaCode\Framework\Core\Session\Session;
 use JayaCode\Framework\Core\View\View;
 
 /**
@@ -11,6 +13,10 @@ use JayaCode\Framework\Core\View\View;
  */
 class Controller
 {
+    /**
+     * @var Application
+     */
+    protected $app;
     /**
      * @var Request
      */
@@ -22,34 +28,45 @@ class Controller
     protected $response;
 
     /**
+     * @var Session
+     */
+    protected $session;
+
+    /**
      * @var View
      */
     protected $viewEngine;
+
     /**
      * Controller constructor.
-     * @param Request $request
-     * @param Response $response
+     * @param Application $app
      */
-    public function __construct(Request $request = null, Response $response = null)
+    public function __construct(Application $app)
     {
-        $this->initialize($request, $response);
+        $this->initialize($app);
     }
 
     /**
-     * @param Request|null $request
-     * @param Response $response
+     * @param Application $app
      */
-    public function initialize(Request $request = null, Response $response = null)
+    public function initialize(Application $app)
     {
-        $this->request = $request;
-        $this->response = $response;
+        $this->app = $app;
+        $this->request = $app->request;
+        $this->response = $app->response;
+        $this->session = $app->session;
 
         $this->viewEngine = new View();
+
+        $this->viewEngine->addGlobal("app", $this->app);
+        $this->viewEngine->addGlobal("request", $this->request);
+        $this->viewEngine->addGlobal("response", $this->response);
+        $this->viewEngine->addGlobal("session", $this->session);
     }
 
     /**
      * @param Response $response
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return Response
      */
     public function out(Response $response)
     {
@@ -57,13 +74,12 @@ class Controller
     }
 
     /**
-     * @param Request|null $request
-     * @param Response|null $response
+     * @param Application $app
      * @return Controller
      */
-    public static function create(Request $request = null, Response $response = null)
+    public static function create(Application $app)
     {
-        return new static($request, $response);
+        return new static($app);
     }
 
     /**

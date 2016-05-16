@@ -116,11 +116,7 @@ class Request extends BaseRequest
      */
     public function post($name = null, $default = null)
     {
-        if (is_null($name)) {
-            return $this->request->all();
-        }
-        $result = $this->request->get($name);
-        return $result?$result:$default;
+        return is_null($name)?$this->request->all():$this->request->get($name, $default);
     }
 
     /**
@@ -139,15 +135,7 @@ class Request extends BaseRequest
      */
     public function oldPost($name = null, $default = null)
     {
-        if (is_null($name)) {
-            return $this->session->getFlash("old.post.{$name}");
-        }
-
-        if (null !== $result = $this->session->getFlash("old.post.{$name}")) {
-            return $result;
-        }
-
-        return $default;
+        return $this->getOldByFullName("old.post.{$name}");
     }
 
     /**
@@ -166,13 +154,7 @@ class Request extends BaseRequest
      */
     public function query($name = null, $default = null)
     {
-        if (is_null($name)) {
-            return $this->query->all();
-        }
-
-        $result = $this->query->get($name);
-
-        return $result?$result:$default;
+        return is_null($name)?$this->query->all():$this->query->get($name, $default);
     }
 
     /**
@@ -189,13 +171,14 @@ class Request extends BaseRequest
      * @param null $default
      * @return array
      */
-    public function oldQuery($name = null, $default = null)
+    public function oldQuery($name, $default = null)
     {
-        if (is_null($name)) {
-            return $this->session->getFlash("old.query.{$name}");
-        }
+        return $this->getOldByFullName("old.query.{$name}");
+    }
 
-        if (null !== $result = $this->session->getFlash("old.query.{$name}")) {
+    private function getOldByFullName($name, $default = null)
+    {
+        if (null !== $result = $this->session->getFlash($name)) {
             return $result;
         }
 

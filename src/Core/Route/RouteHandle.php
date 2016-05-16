@@ -1,6 +1,7 @@
 <?php
 namespace JayaCode\Framework\Core\Route;
 
+use JayaCode\Framework\Core\Application\Application;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 
@@ -18,43 +19,46 @@ class RouteHandle
     /**
      * @var Request
      */
-    public $request;
+    protected $request;
 
     /**
      * @var Response
      */
-    public $response;
+    protected $response;
+
+    /**
+     * @var Application
+     */
+    protected $app;
 
     /**
      * Route constructor.
-     * @param Request $request
-     * @param Response $response
+     * @param Application $app
      */
-    public function __construct(Request &$request = null, Response &$response = null)
+    public function __construct(Application $app)
     {
-        $this->initialize($request, $response);
+        $this->initialize($app);
     }
 
     /**
      * initialize Route
-     * @param Request $request
-     * @param Response $response
+     * @param Application $app
      */
-    public function initialize(Request &$request = null, Response &$response = null)
+    public function initialize(Application $app)
     {
-        $this->request = &$request;
-        $this->response = &$response;
+        $this->app = $app;
+        $this->request = $app->request;
+        $this->response = $app->response;
     }
 
     /**
      * Create Route object from static function
-     * @param Request $request
-     * @param Response $response
+     * @param Application $app
      * @return RouteHandle
      */
-    public static function create(Request &$request = null, Response &$response = null)
+    public static function create(Application $app)
     {
-        return new RouteHandle($request, $response);
+        return new RouteHandle($app);
     }
 
     /**
@@ -121,7 +125,7 @@ class RouteHandle
             throw new \InvalidArgumentException("controller " . $controllerName . " not found");
         }
 
-        $controller = new $controllerName($this->request, $this->response);
+        $controller = new $controllerName($this->app);
 
         $actionMethod = $route->action["method"];
 
@@ -129,7 +133,7 @@ class RouteHandle
             throw new \InvalidArgumentException("method " . $actionMethod . " not found");
         }
 
-        $content = $controller->$actionMethod();
+        $content = $controller->$actionMethod($this->request);
         $this->response->setDataContent($content);
     }
 
