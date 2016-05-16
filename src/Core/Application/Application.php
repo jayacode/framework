@@ -1,6 +1,8 @@
 <?php
 namespace JayaCode\Framework\Core\Application;
 
+use JayaCode\Framework\Core\Database\Database;
+use JayaCode\Framework\Core\Database\Model\Model;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 use JayaCode\Framework\Core\Route\RouteHandle;
@@ -37,6 +39,11 @@ class Application
      * @var RouteHandle
      */
     public $routeHandle;
+
+    /**
+     * @var Database
+     */
+    public $db;
 
     /**
      * Application constructor.
@@ -76,8 +83,27 @@ class Application
         static::$app = $this;
 
         $this->setTimeZone();
+
+        $this->initDatabase();
     }
 
+    /**
+     * initialize Database
+     */
+    protected function initDatabase()
+    {
+        $dbConfig = (array) config("database");
+
+        if (count($dbConfig) > 0) {
+            $this->db = new Database($dbConfig);
+            Model::$db = $dbConfig;
+        }
+    }
+
+    /**
+     * @param string $timezone
+     * @return bool
+     */
     public function setTimeZone($timezone = 'Asia/Jakarta')
     {
         return date_default_timezone_set($timezone);
