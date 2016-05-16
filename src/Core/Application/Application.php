@@ -4,6 +4,7 @@ namespace JayaCode\Framework\Core\Application;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
 use JayaCode\Framework\Core\Route\RouteHandle;
+use JayaCode\Framework\Core\Session\Session;
 
 /**
  * Class Application
@@ -20,6 +21,11 @@ class Application
      * @var Response
      */
     public $response;
+
+    /**
+     * @var Session
+     */
+    public $session;
 
     /**
      * @var RouteHandle
@@ -40,7 +46,7 @@ class Application
      */
     public static function create()
     {
-        return new Application();
+        return new static();
     }
 
     /**
@@ -48,7 +54,13 @@ class Application
      */
     public function initialize()
     {
-        $this->request = Request::createFromSymfonyGlobal();
+        $this->session = new Session();
+        if (!$this->session->isStarted()) {
+            $this->session->start();
+        }
+
+        $this->request = Request::createFromSymfonyGlobal($this->session);
+
         $this->response = Response::create();
         $this->routeHandle = RouteHandle::create($this->request, $this->response);
 
@@ -107,5 +119,19 @@ class Application
     public function setListRoute($routesArr = array())
     {
         $this->routeHandle->setRoutes($routesArr);
+    }
+
+    /**
+     * terminate application
+     */
+    public function terminate()
+    {
+        $inputs = array(
+            "post" => $this->request->post(),
+            "query" => $this->request->query()
+        );
+        $this->session->setFlash("old", $inputs);
+
+        $this->request->getSession()->terminate();
     }
 }
