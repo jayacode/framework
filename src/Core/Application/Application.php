@@ -77,6 +77,20 @@ class Application
     }
 
     /**
+     * @param $baseDir
+     */
+    public function initConfigDir($baseDir)
+    {
+        if (!defined("__APP_DIR__")) {
+            define("__APP_DIR__", $baseDir);
+        }
+
+        if (!defined("__APP_DIR__")) {
+            define("__CONFIG_DIR__", __APP_DIR__."/config");
+        }
+    }
+
+    /**
      * Run Application
      */
     public function run()
