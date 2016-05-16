@@ -48,7 +48,7 @@ class GrammarMySql extends Grammar
         $this->queryString .= " FROM {$this->getFormattedTableOrColumn($table)}";
 
         $this->queryString .= $this->where();
-        
+
         $this->queryString .= $this->sort();
         $this->queryString .= $this->limit();
 
@@ -118,9 +118,6 @@ class GrammarMySql extends Grammar
      */
     private function sort()
     {
-        if (empty($this->query->sort)) {
-            return "";
-        }
 
         $sort = $this->query->sort;
 
