@@ -14,6 +14,11 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 class Application
 {
     /**
+     * @var Application
+     */
+    public static $app;
+
+    /**
      * @var Request
      */
     public $request;
@@ -67,6 +72,8 @@ class Application
 
         $this->response = Response::create();
         $this->routeHandle = RouteHandle::create($this);
+
+        static::$app = $this;
 
         $this->setTimeZone();
     }
@@ -153,7 +160,5 @@ class Application
         $this->session->setFlash("old", $inputs);
 
         $this->request->getSession()->terminate();
-
-        exit();
     }
 }
