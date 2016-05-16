@@ -140,6 +140,21 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
                 Query::table("foo")->select()->where("col", "colVal")->asc("col")
             ),
 
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? LIMIT 1",
+                    array("colVal")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->limit(1)
+            ),
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? LIMIT 1 OFFSET 2",
+                    array("colVal")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->limit(1, 2)
+            ),
 
             array(
                 array(
