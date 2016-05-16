@@ -8,9 +8,9 @@ namespace JayaCode\Framework\Core\Helper\Config;
 class Config
 {
     /**
-     * @var null
+     * @var string
      */
-    protected static $configDir = null;
+    protected static $configDir = "/config";
     /**
      * @var array
      */
