@@ -2,6 +2,10 @@
 
 jayacode database package
 
+## Requirements
+* PHP >= 5.5
+* PDO PHP Extension
+
 ## Install
 
 Via Composer
@@ -35,14 +39,11 @@ $db = $db->table("guestbook")->select()->where("name", "restu");
  * get all data
  */
 
-$db->execute()->all();
+$db->all();
 
-// OR
+// get first data
 
-$db->execute();
-while ($data = $db->get()) {
-    $data;
-}
+$db->first();
 ```
 
 ### Create Connection

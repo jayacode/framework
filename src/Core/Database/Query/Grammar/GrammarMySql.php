@@ -48,6 +48,8 @@ class GrammarMySql extends Grammar
         $this->queryString .= " FROM {$this->getFormattedTableOrColumn($table)}";
 
         $this->queryString .= $this->where();
+        
+        $this->queryString .= $this->sort();
 
         return $this->queryString;
     }
@@ -108,6 +110,21 @@ class GrammarMySql extends Grammar
         }
 
         return $q->count()?$q->prepend(" WHERE ")->__toString():"";
+    }
+
+    private function sort()
+    {
+        if (!$this->query->sort || count($this->query->sort) <= 0) {
+            return "";
+        }
+
+        $sort = $this->query->sort;
+
+        if (!isset($sort['column']) || !isset($sort['order'])) {
+            return "";
+        }
+
+        return " ORDER BY {$this->getFormattedTableOrColumn($sort['column'])} {$sort['order']}";
     }
 
     /**

@@ -10,6 +10,7 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
  * @property mixed query
  * @property null params
  * @property array values
+ * @property array sort
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -133,6 +134,9 @@ class Query
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function delete()
     {
         $this->type = Query::TYPE_DELETE;
@@ -251,6 +255,39 @@ class Query
     public function orBetween($column, $value)
     {
         return $this->between($column, $value, "OR");
+    }
+
+    /**
+     * @param $column
+     * @param $order
+     * @return $this
+     */
+    public function sort($column, $order)
+    {
+        $this->attributes['sort'] = array(
+            'column' => $column,
+            'order' => $order
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @return Query
+     */
+    public function asc($column)
+    {
+        return $this->sort($column, "ASC");
+    }
+
+    /**
+     * @param $column
+     * @return Query
+     */
+    public function desc($column)
+    {
+        return $this->sort($column, "DESC");
     }
 
     /**

@@ -154,14 +154,14 @@ class Database
     /**
      * @param array $columnsVal
      * @param bool $runExecute
-     * @return mixed
+     * @return $this|mixed
      */
     public function insert(array $columnsVal, $runExecute = false)
     {
         $this->query->insert($columnsVal);
 
         if ($runExecute) {
-            $status = $this->execute();
+            $status = $this->execute(false);
             $this->clear();
 
             return $status;
@@ -183,7 +183,7 @@ class Database
 
             $this->query->update($columnsVal)->where($primaryKey, $keyVal);
 
-            $status = $this->execute();
+            $status = $this->execute(false);
             $this->clear();
 
             return $status;
@@ -204,7 +204,7 @@ class Database
         if ($primaryKey && $primaryKeyVal) {
             $this->query->delete()->where($primaryKey, $primaryKeyVal);
 
-            $status = $this->execute();
+            $status = $this->execute(false);
             $this->clear();
 
             return $status;
@@ -331,15 +331,37 @@ class Database
     }
 
     /**
-     * @return bool
+     * @param $column
+     * @return $this
      */
-    public function execute()
+    public function asc($column)
+    {
+        $this->query->asc($column);
+        return $this;
+    }
+
+    /**
+     * @param $column
+     * @return $this
+     */
+    public function desc($column)
+    {
+        $this->query->desc($column);
+        return $this;
+    }
+
+    /**
+     * @param bool $returnThis
+     * @return mixed
+     */
+    public function execute($returnThis = true)
     {
         $qArr = $this->query->build($this->grammar);
 
         $this->statement = $this->pdo->prepare($qArr[0]);
+        $status = $this->statement->execute($qArr[1]);
 
-        return $this->statement->execute($qArr[1]);
+        return ($returnThis) ? $this : $status;
     }
 
     /**
@@ -360,7 +382,11 @@ class Database
 
             return $dataModel;
         }
-        return $this->statement->fetchAll();
+
+        $data = $this->statement->fetchAll();
+        $this->clear();
+        
+        return $data;
     }
 
     /**

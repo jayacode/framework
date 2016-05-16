@@ -134,6 +134,23 @@ class MySqlQueryTest extends \PHPUnit_Framework_TestCase
 
             array(
                 array(
+                    "SELECT * FROM `foo` WHERE `col` = ? ORDER BY `col` ASC",
+                    array("colVal")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->asc("col")
+            ),
+
+
+            array(
+                array(
+                    "SELECT * FROM `foo` WHERE `col` = ? ORDER BY `col` DESC",
+                    array("colVal")
+                ),
+                Query::table("foo")->select()->where("col", "colVal")->desc("col")
+            ),
+
+            array(
+                array(
                     "INSERT INTO `foo`(`col1`, `col2`) VALUES(?, ?)",
                     array("colVal", "colVal2")
                 ),
