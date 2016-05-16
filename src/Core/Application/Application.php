@@ -85,7 +85,7 @@ class Application
             define("__APP_DIR__", $baseDir);
         }
 
-        if (!defined("__APP_DIR__")) {
+        if (!defined("__CONFIG_DIR__")) {
             define("__CONFIG_DIR__", __APP_DIR__."/config");
         }
     }
