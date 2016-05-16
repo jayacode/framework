@@ -136,13 +136,13 @@ class GrammarMySql extends Grammar
      */
     private function limit()
     {
-        if (empty($this->query->limit) || !is_numeric($this->query->limit)) {
+        if (!is_numeric($this->query->limit)) {
             return "";
         }
 
         $str = " LIMIT {$this->query->limit}";
 
-        if ($this->query->offset && is_numeric($this->query->offset)) {
+        if (is_numeric($this->query->offset)) {
             $str .= " OFFSET {$this->query->offset}";
         }
         return $str;
