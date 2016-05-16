@@ -1,5 +1,6 @@
 <?php
 
+use JayaCode\Framework\Core\Helper\Config\Config;
 use JayaCode\Framework\Core\Helper\HelperArray\ArrayH;
 
 if (!function_exists("arr_get")) {
@@ -27,6 +28,7 @@ if (!function_exists("arr_merge_all")) {
         return ArrayH::arrMergeAll($arr, $arr2);
     }
 }
+
 if (!function_exists("arr_exclude")) {
     /**
      * @param array $arr
@@ -36,5 +38,16 @@ if (!function_exists("arr_exclude")) {
     function arr_exclude(array $arr, array $arr2)
     {
         return ArrayH::arrExclude($arr, $arr2);
+    }
+}
+
+if (!function_exists("config")) {
+    /**
+     * @param $name
+     * @return mixed
+     */
+    function config($name)
+    {
+        return Config::get($name);
     }
 }
