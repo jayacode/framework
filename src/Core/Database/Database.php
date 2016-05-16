@@ -351,6 +351,17 @@ class Database
     }
 
     /**
+     * @param $num
+     * @param null $offset
+     * @return $this
+     */
+    public function limit($num, $offset = null)
+    {
+        $this->query->limit($num, $offset);
+        return $this;
+    }
+
+    /**
      * @param bool $returnThis
      * @return mixed
      */
@@ -394,8 +405,7 @@ class Database
      */
     public function first()
     {
-        // TODO: use limit after query builder limit finish
-        $data = $this->get();
+        $data = $this->limit(1)->get();
         $this->clear();
         return $data;
     }

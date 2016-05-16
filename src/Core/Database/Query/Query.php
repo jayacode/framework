@@ -11,6 +11,8 @@ use JayaCode\Framework\Core\Database\Query\Grammar\Grammar;
  * @property null params
  * @property array values
  * @property array sort
+ * @property array offset
+ * @property array limit
  * @package JayaCode\Framework\Core\Database\Query
  */
 class Query
@@ -288,6 +290,19 @@ class Query
     public function desc($column)
     {
         return $this->sort($column, "DESC");
+    }
+
+    /**
+     * @param $num
+     * @param null $offset
+     * @return $this
+     */
+    public function limit($num, $offset = null)
+    {
+        $this->attributes['limit'] = $num;
+        $this->attributes['offset'] = $offset;
+        
+        return $this;
     }
 
     /**

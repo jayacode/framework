@@ -50,6 +50,7 @@ class GrammarMySql extends Grammar
         $this->queryString .= $this->where();
         
         $this->queryString .= $this->sort();
+        $this->queryString .= $this->limit();
 
         return $this->queryString;
     }
@@ -112,9 +113,12 @@ class GrammarMySql extends Grammar
         return $q->count()?$q->prepend(" WHERE ")->__toString():"";
     }
 
+    /**
+     * @return string
+     */
     private function sort()
     {
-        if (!$this->query->sort || count($this->query->sort) <= 0) {
+        if (empty($this->query->sort)) {
             return "";
         }
 
@@ -125,6 +129,23 @@ class GrammarMySql extends Grammar
         }
 
         return " ORDER BY {$this->getFormattedTableOrColumn($sort['column'])} {$sort['order']}";
+    }
+
+    /**
+     * @return string
+     */
+    private function limit()
+    {
+        if (empty($this->query->limit) || !is_numeric($this->query->limit)) {
+            return "";
+        }
+
+        $str = " LIMIT {$this->query->limit}";
+
+        if ($this->query->offset && is_numeric($this->query->offset)) {
+            $str .= " OFFSET {$this->query->offset}";
+        }
+        return $str;
     }
 
     /**
