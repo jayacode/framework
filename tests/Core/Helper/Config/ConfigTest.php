@@ -9,9 +9,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        if (!defined("__CONFIG_DIR__")) {
-            define("__CONFIG_DIR__", __DIR__."/__file");
-        }
+        Config::$configDir =__DIR__."/__file";
     }
 
     /**
