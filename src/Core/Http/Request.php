@@ -135,7 +135,7 @@ class Request extends BaseRequest
      */
     public function oldPost($name = null, $default = null)
     {
-        return $this->getOldByFullName("old.post.{$name}");
+        return $this->getOldByFullName("old.post.{$name}", $default);
     }
 
     /**
@@ -173,7 +173,7 @@ class Request extends BaseRequest
      */
     public function oldQuery($name, $default = null)
     {
-        return $this->getOldByFullName("old.query.{$name}");
+        return $this->getOldByFullName("old.query.{$name}", $default);
     }
 
     private function getOldByFullName($name, $default = null)
