@@ -96,7 +96,7 @@ class Application
 
         if (count($dbConfig) > 0) {
             $this->db = new Database($dbConfig);
-            Model::$db = $dbConfig;
+            Model::$db = $this->db;
         }
     }
 
