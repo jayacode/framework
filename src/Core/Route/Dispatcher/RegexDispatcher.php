@@ -38,6 +38,7 @@ class RegexDispatcher implements Dispatcher
     /**
      * @param $httpMethod
      * @param $path
+     * @return array|mixed
      */
     public function dispatch($httpMethod, $path)
     {
