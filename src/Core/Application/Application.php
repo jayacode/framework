@@ -112,7 +112,7 @@ class Application
     /**
      * @param $baseDir
      */
-    public function initConfigDir($baseDir)
+    public static function initConfigDir($baseDir)
     {
         if (!defined("__APP_DIR__")) {
             define("__APP_DIR__", $baseDir);

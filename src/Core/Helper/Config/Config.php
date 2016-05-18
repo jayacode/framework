@@ -10,7 +10,7 @@ class Config
     /**
      * @var string
      */
-    public static $configDir = "/config";
+    public static $configDir;
     /**
      * @var array
      */
@@ -27,6 +27,10 @@ class Config
 
         if (!isset(static::$dataConfig[$configName])) {
             static::$dataConfig[$configName] = static::load($configName.".php");
+        }
+
+        if ($configName == $name && !is_array(static::$dataConfig[$configName])) {
+            return static::$dataConfig[$configName];
         }
 
         return arr_get(static::$dataConfig, $name);
