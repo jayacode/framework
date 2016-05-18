@@ -5,7 +5,8 @@ use JayaCode\Framework\Core\Database\Database;
 use JayaCode\Framework\Core\Database\Model\Model;
 use JayaCode\Framework\Core\Http\Request;
 use JayaCode\Framework\Core\Http\Response;
-use JayaCode\Framework\Core\Route\RouteHandle;
+use JayaCode\Framework\Core\Route\Dispatcher\Dispatcher as DispatcherRoute;
+use JayaCode\Framework\Core\Route\Status;
 use JayaCode\Framework\Core\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
@@ -36,9 +37,9 @@ class Application
     public $session;
 
     /**
-     * @var RouteHandle
+     * @var DispatcherRoute
      */
-    public $routeHandle;
+    protected $routeDispatcher;
 
     /**
      * @var Database
@@ -78,7 +79,6 @@ class Application
         $this->request = Request::createFromSymfonyGlobal($this->session);
 
         $this->response = Response::create();
-        $this->routeHandle = RouteHandle::create($this);
 
         static::$app = $this;
 
@@ -128,7 +128,24 @@ class Application
      */
     public function run()
     {
-        $this->routeHandle->handle();
+        $route = $this->routeDispatcher->dispatch($this->request->method(), $this->request->path());
+
+        if ($route[0] == Status::FOUND) {
+            if (is_callable($route[1])) {
+                $this->response->setContent(call_user_func($route[1]));
+            } elseif (is_array($route[1])) {
+                $controllerName = $route[1]["controller"];
+                $actionMethod = $route[1]["method"];
+
+                $controller = new $controllerName($this);
+
+                $content = $controller->$actionMethod($this->request);
+                $this->response->setDataContent($content);
+            }
+        } else {
+            $this->response->setNotFound();
+        }
+
         $this->response->send();
 
         $this->terminate();
@@ -167,11 +184,11 @@ class Application
     }
 
     /**
-     * @param array $routesArr
+     * @param callable $definitionCollection
      */
-    public function setListRoute($routesArr = array())
+    public function setDataRoute($definitionCollection)
     {
-        $this->routeHandle->setRoutes($routesArr);
+        $this->routeDispatcher = \JayaCode\Framework\Core\Route\dispatcherBasic($definitionCollection);
     }
 
     /**

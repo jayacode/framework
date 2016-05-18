@@ -3,19 +3,19 @@ namespace JayaCode\Framework\Core\Route;
 
 /**
  * Class Route
+ * @property array explodePath
+ * @property array ruleMatches
+ * @method get(string $name, string $path, mixed $handle)
+ * @method post(string $name, string $path, mixed $handle)
+ * @method put(string $name, string $path, mixed $handle)
+ * @method delete(string $name, string $path, mixed $handle)
+ * @method head(string $name, string $path, mixed $handle)
+ * @method options(string $name, string $path, mixed $handle)
+ * @method connect(string $name, string $path, mixed $handle)
  * @package JayaCode\Framework\Core\Route
  */
 class Route
 {
-    /**
-     * @var string
-     */
-    public $path;
-
-    /**
-     * @var array | callable
-     */
-    public $action;
 
     /**
      * @var string
@@ -25,131 +25,89 @@ class Route
     /**
      * @var string
      */
+    public $path;
+
+    /**
+     * @var
+     */
+    public $handle;
+
+    /**
+     * @var string
+     */
     public $method;
 
     /**
-     * @var string
+     * @var array
      */
-    public $middleware;
+    public $ruleMatches = array();
 
     /**
-     * @var string
+     * @var
      */
-    public $validation;
+    public $attributes;
 
     /**
-     * @param $key
-     * @param $path
-     * @param $action
+     * Route constructor.
+     * @param string $key
+     * @param string $path
+     * @param $handle
      * @param string $method
-     * @param string $middleware
-     * @param string $validation
      */
-    public function __construct($key, $path, $action, $method = "GET", $middleware = null, $validation = null)
+    public function __construct($key, $path, $handle, $method)
     {
-        $this->path = $path;
-        $this->action = $action;
         $this->key = $key;
+        $this->path = $path;
+        $this->handle = $handle;
         $this->method = $method;
-        $this->middleware = $middleware;
-        $this->validation = $validation;
     }
 
     /**
      * @param $key
      * @param $path
-     * @param $action
+     * @param $handle
      * @param string $method
-     * @param string $middleware
-     * @param string $validation
      * @return static
      */
-    public static function create($key, $path, $action, $method = "GET", $middleware = null, $validation = null)
+    public static function create($key, $path, $handle, $method = "GET")
     {
-        return new static($key, $path, $action, $method, $middleware, $validation);
-    }
-
-
-    /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
-     * @return static
-     */
-    public static function get($key, $path, $action, $middleware = null, $validation = null)
-    {
-        return new static($key, $path, $action, "GET", $middleware, $validation);
+        return new static($key, $path, $handle, $method);
     }
 
     /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
+     * @param $name
+     * @param $arguments
      * @return Route
      */
-    public static function post($key, $path, $action, $middleware = null, $validation = null)
+    public static function __callStatic($name, $arguments)
     {
-        return new static($key, $path, $action, "POST", $middleware, $validation);
+        if (count($arguments) != 3) {
+            throw new \InvalidArgumentException();
+        }
+
+        $method = strtoupper($name);
+        return static::create($arguments[0], $arguments[1], $arguments[2], $method);
     }
 
     /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
-     * @return static
+     * @param $name
+     * @param $value
      */
-    public static function put($key, $path, $action, $middleware = null, $validation = null)
+    public function __set($name, $value)
     {
-        return new static($key, $path, $action, "PUT", $middleware, $validation);
-    }
-
-    public static function head($key, $path, $action, $middleware = null, $validation = null)
-    {
-        return new static($key, $path, $action, "HEAD", $middleware, $validation);
+        $this->attributes[$name] = $value;
     }
 
     /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
-     * @return static
+     * @param $name
+     * @return mixed
      */
-    public static function delete($key, $path, $action, $middleware = null, $validation = null)
+    public function __get($name)
     {
-        return new static($key, $path, $action, "DELETE", $middleware, $validation);
-    }
+        if (!isset($this->attributes[$name])) {
+            throw new \OutOfBoundsException();
+        }
 
-    /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
-     * @return static
-     */
-    public static function options($key, $path, $action, $middleware = null, $validation = null)
-    {
-        return new static($key, $path, $action, "OPTIONS", $middleware, $validation);
-    }
-
-    /**
-     * @param $key
-     * @param $path
-     * @param $action
-     * @param string $middleware
-     * @param string $validation
-     * @return static
-     */
-    public static function connect($key, $path, $action, $middleware = null, $validation = null)
-    {
-        return new static($key, $path, $action, "CONNECT", $middleware, $validation);
+        return $this->attributes[$name];
     }
 }
