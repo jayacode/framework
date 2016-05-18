@@ -6,7 +6,6 @@ use JayaCode\Framework\Core\Route\Dispatcher\Dispatcher;
 use JayaCode\Framework\Core\Route\Dispatcher\RegexDispatcher;
 
 if (!function_exists('JayaCode\Framework\Core\RouteRoute\dispatcherBasic')) {
-
     /**
      * @param callable $definitionCollection
      * @param array $options
