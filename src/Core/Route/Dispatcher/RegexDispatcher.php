@@ -44,7 +44,9 @@ class RegexDispatcher implements Dispatcher
         $this->setPath($path);
         $this->httpMethod = $httpMethod;
 
-        $result[0] = Status::NOT_FOUND;
+        $result = [
+            Status::NOT_FOUND
+        ];
 
         $data = is_null($this->data)?$this->routeCollector->getData():$this->data;
         $countData = count($data);
@@ -61,19 +63,13 @@ class RegexDispatcher implements Dispatcher
                     for ($j = 0; $j < $countExplodePath && $result[0] == Status::FOUND; $j++) {
                         $countMatches = count($route->ruleMatches[$j]);
 
-                        if ($countMatches == 0 || $countMatches == 2
-                            && $this->explodedPath[$j] != $route->explodePath[$j]) {
+                        if ($countMatches == 0 ||
+                            $countMatches == 2 && $this->explodedPath[$j] != $route->explodePath[$j] ||
+                            $countMatches == 5 &&
+                            !preg_match("/^".$route->ruleMatches[$j][4]."$/", $this->explodedPath[$j])) {
                             $result[0] = Status::NOT_FOUND;
-                        } elseif ($countMatches == 3) {
+                        } elseif ($countMatches == 3 || $countMatches == 5) {
                             $result[2][$route->ruleMatches[$j][2]] = $this->explodedPath[$j];
-                        } elseif ($countMatches == 5) {
-                            if (!preg_match("/^".$route->ruleMatches[$j][4]."$/", $this->explodedPath[$j])) {
-                                $result[0] = Status::NOT_FOUND;
-                            } else {
-                                $result[2][$route->ruleMatches[$j][2]] = $this->explodedPath[$j];
-                            }
-                        } elseif ($countMatches == 0) {
-                            $result[0] = Status::NOT_FOUND;
                         }
                     }
                 }
