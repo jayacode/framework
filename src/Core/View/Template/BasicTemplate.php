@@ -34,11 +34,13 @@ class BasicTemplate extends Template
      */
     public function render()
     {
-        if (!$this->script) {
+        if ($this->script === null) {
             $this->buildScript();
         }
 
-        extract($this->vars->all());
+        $varArray = $this->vars->all();
+        extract($varArray);
+        
         ob_start();
         eval("?>" . $this->script);
         $result = ob_get_contents();
