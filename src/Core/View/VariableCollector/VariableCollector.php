@@ -18,7 +18,7 @@ interface VariableCollector
     public function replace($data);
 
     /**
-     * @return mixed
+     * @return array
      */
     public function all();
 

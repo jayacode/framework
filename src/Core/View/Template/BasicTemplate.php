@@ -18,13 +18,13 @@ class BasicTemplate extends Template
     public function buildScript()
     {
         $fileCache = $this->cacheDir.str_replace(["/", "."], "_", $this->fileTemplate);
-        if ($this->cacheDir && file_exists($fileCache) && empty($this->contentParent)) {
+        if ($this->cacheDir !== null && file_exists($fileCache) && empty($this->contentParent)) {
             return $this->script = file_get_contents($fileCache);
         }
 
         $this->script = $this->converter->build(file_get_contents($this->locTemplate));
-        
-        if ($this->cacheDir && empty($this->contentParent)) {
+
+        if ($this->cacheDir !== null && empty($this->contentParent)) {
             file_put_contents($fileCache, $this->script);
         }
     }

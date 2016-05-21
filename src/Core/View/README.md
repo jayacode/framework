@@ -37,7 +37,7 @@ use JayaCode\Framework\Core\View\View;
 
 require_once "vendor/autoload.php";
 
-$templateEngine = new View($viewDir);
+$templateEngine = \JayaCode\Framework\Core\View\templateEngine('tests/Core/View/__file_view_test/');
 
 /**
  * if using cache & global variable

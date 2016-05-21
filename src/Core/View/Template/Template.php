@@ -26,7 +26,7 @@ abstract class Template
     protected $fileTemplate;
 
     /**
-     * @var null
+     * @var string|null
      */
     protected $script = null;
 

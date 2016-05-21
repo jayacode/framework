@@ -32,6 +32,7 @@
             "JayaCode\\Framework\\": "src"
         },
         "files": [
+          "src/Core/View/functions.php",
           "src/Core/Route/functions.php",
           "src/Core/Helper/helper_function.php"
         ]
@@ -41,6 +42,7 @@
             "JayaCode\\Framework\\Tests\\": "tests"
         },
         "files": [
+          "src/Core/View/functions.php",
           "src/Core/Route/functions.php",
           "src/Core/Helper/helper_function.php"
         ]
