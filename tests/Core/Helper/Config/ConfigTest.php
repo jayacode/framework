@@ -37,4 +37,9 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
             ]
         ];
     }
+    
+    public function testDefaultValue()
+    {
+        $this->assertEquals("foo", config("asal", "foo"));
+    }
 }

@@ -18,9 +18,10 @@ class Config
 
     /**
      * @param $name
+     * @param $default
      * @return mixed
      */
-    public static function get($name)
+    public static function get($name, $default = null)
     {
         $configName = explode(".", $name);
         $configName = $configName[0];
@@ -33,7 +34,7 @@ class Config
             return static::$dataConfig[$configName];
         }
 
-        return arr_get(static::$dataConfig, $name);
+        return arr_get(static::$dataConfig, $name, $default);
     }
 
     /**

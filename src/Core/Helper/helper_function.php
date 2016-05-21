@@ -44,10 +44,11 @@ if (!function_exists("arr_exclude")) {
 if (!function_exists("config")) {
     /**
      * @param $name
+     * @param $default
      * @return mixed
      */
-    function config($name)
+    function config($name, $default = null)
     {
-        return Config::get($name);
+        return Config::get($name, $default);
     }
 }

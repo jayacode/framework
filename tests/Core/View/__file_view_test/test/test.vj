@@ -1,0 +1,9 @@
+[@ parent master @]
+
+[@ content body @]
+
+{{ $var }}
+{{ $var }}
+{{ $var }}
+
+[@ endcontent @]

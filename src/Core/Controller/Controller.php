@@ -56,12 +56,13 @@ class Controller
         $this->response = $app->response;
         $this->session = $app->session;
 
-        $this->viewEngine = new View();
-
-        $this->viewEngine->addGlobal("app", $this->app);
-        $this->viewEngine->addGlobal("request", $this->request);
-        $this->viewEngine->addGlobal("response", $this->response);
-        $this->viewEngine->addGlobal("session", $this->session);
+        $this->viewEngine = new View(config("app.viewDir", __DIR__));
+        $this->viewEngine->vars->add([
+            "app" => $this->app,
+            "request" => $this->request,
+            "response" => $this->response,
+            "session" => $this->session
+        ]);
     }
 
     /**
@@ -106,7 +107,9 @@ class Controller
      */
     protected function view($name, array $data = array())
     {
-        $tpl = $this->viewEngine->loadTemplate($name);
-        return $tpl->render($data);
+        $tpl = $this->viewEngine->template($name);
+        $tpl->vars->add($data);
+
+        return $tpl->render();
     }
 }

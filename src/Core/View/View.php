@@ -1,56 +1,96 @@
 <?php
 namespace JayaCode\Framework\Core\View;
 
-use Twig_Autoloader;
-use Twig_Environment;
-use Twig_Loader_Filesystem;
+use JayaCode\Framework\Core\View\Converter\BasicConvert;
+use JayaCode\Framework\Core\View\Converter\Converter;
+use JayaCode\Framework\Core\View\Template\BasicTemplate;
+use JayaCode\Framework\Core\View\Template\Template;
+use JayaCode\Framework\Core\View\VariableCollector\BasicVariableCollector;
+use JayaCode\Framework\Core\View\VariableCollector\VariableCollector;
 
 /**
  * Class View
+ * @property VariableCollector vars
  * @package JayaCode\Framework\Core\View
  */
-class View extends Twig_Environment
+class View
 {
+    /**
+     * @var VariableCollector
+     */
+    protected $varCollector;
 
     /**
      * @var array
      */
-    private $engineConfig;
+    protected $options = array();
 
     /**
-     * @var Twig_Loader_Filesystem
+     * @var Converter
      */
-    protected $loader;
+    protected $converter;
 
     /**
      * View constructor.
+     * @param string $viewDir
+     * @param $vars
      * @param array $options
+     * @throws \Exception
      */
-    public function __construct(array $options = array())
+    public function __construct($viewDir = "/", $vars = null, $options = array())
     {
-        Twig_Autoloader::register();
 
-        if (!empty($options)) {
-            $this->engineConfig = $options;
-        } else {
-            $this->defaultEngineConfig();
+        $this->options = $options + [
+            "extension" => ".vj",
+            "variableCollectionClass" => BasicVariableCollector::class,
+            "templateClass" => BasicTemplate::class,
+            "converter" => BasicConvert::class,
+            "cacheDir" => null
+        ];
+
+        $this->varCollector = new $this->options["variableCollectionClass"]();
+        $this->converter = new $this->options["converter"]();
+
+        Template::$extension = $this->options["extension"];
+
+        $this->setViewDir($viewDir);
+        if ($vars) {
+            $this->varCollector->add($vars);
         }
-
-        $this->loader = new Twig_Loader_Filesystem($this->engineConfig['view_dir']);
-
-        parent::__construct($this->loader);
-
-        $this->setCache($this->engineConfig['cache']);
     }
 
     /**
-     *  Init default view engine options
+     * @param mixed $viewDir
+     * @throws \Exception
      */
-    private function defaultEngineConfig()
+    public function setViewDir($viewDir)
     {
-        $this->engineConfig['app_dir'] = defined("__APP_DIR__") ? __APP_DIR__ : '/';
-        $this->engineConfig['view_dir'] = defined("__APP_DIR__") ? __APP_DIR__.'/resource/views' : '/';
+        if (!is_dir($viewDir)) {
+            throw new \Exception("not found directory {$viewDir}");
+        }
 
-        $this->engineConfig['cache'] = $this->engineConfig['app_dir'].'/tmp/cache/twig';
+        $this->options['viewDir'] = rtrim($viewDir, "/") . "/";
+    }
+
+    /**
+     * @param $name
+     * @return VariableCollector|null
+     */
+    public function __get($name)
+    {
+        return ($name == "vars")?$this->varCollector:null;
+    }
+
+    /**
+     * @param $fileTemplate
+     * @return Template
+     */
+    public function template($fileTemplate)
+    {
+        $fileTemplateReal = str_replace(".", "/", $fileTemplate);
+        $fileTemplateReal .= $this->options["extension"];
+
+        return new $this->options["templateClass"]($this->options["viewDir"], $fileTemplateReal,
+                                                    $this->varCollector, $this->converter, $this->options['cacheDir']);
     }
 }
