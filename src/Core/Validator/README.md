@@ -47,7 +47,7 @@ class MyValidatorRule extends Rule
     public function isValid()
     {
         if ($this->data != 'my rule') {
-            $this->setErrorMessage($this->attributes["validatorName"], "invalid input");
+            $this->setErrorMessage("myRule", "invalid input");
             return false;
         }
         return true;
