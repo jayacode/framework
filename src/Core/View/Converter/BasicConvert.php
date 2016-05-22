@@ -13,7 +13,7 @@ class BasicConvert implements Converter
                 '/\[\[/',
                 '/\]\]/',
                 '/^\s*@(.*)$/m',
-                '/^\s*\[@\s*parent\s*(\w*)\s*@\]\s*$/m',
+                '/^\s*\[@\s*parent\s*([\w|\.]*)\s*@\]\s*$/m',
                 '/\s*\[@\s*content\s*(\w*)\s*@\](.*)\[@\s*endcontent\s*@\]/Usm'
             ],
             [
