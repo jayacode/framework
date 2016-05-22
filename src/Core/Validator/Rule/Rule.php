@@ -89,7 +89,7 @@ abstract class Rule
     }
 
     /**
-     * @param null $data
+     * @param $data
      */
     public function setData($data)
     {
