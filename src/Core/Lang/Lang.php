@@ -57,21 +57,13 @@ class Lang
     {
         $nameArr = static::tryExplodeName($name);
 
-        if (null !== $return = static::getFromArray(static::$lang, $nameArr, $params, null, false)) {
-            return $return;
-        }
-
-        if (null !== $return = static::getFromFile($nameArr, $params, null, false)) {
+        if (null !== $return = static::searchFormArrayLangOrFile($nameArr, $params, null, false)) {
             return $return;
         }
 
         $nameArrDef = $nameArr;
         $nameArrDef[0] = static::$localeDefault;
-
-        if (null !== $return = static::getFromArray(static::$lang, $nameArrDef, $params, null, false)) {
-            return $return;
-        }
-        if (null !== $return = static::getFromFile($nameArrDef, $params, null, false)) {
+        if (null !== $return = static::searchFormArrayLangOrFile($nameArrDef, $params, null, false)) {
             return $return;
         }
 
@@ -88,13 +80,13 @@ class Lang
      */
     public static function getFromArray($arr, $name, $params = [], $default = null, $getFormDefault = true)
     {
-        $name = static::tryExplodeName($name);
+        $nameArr = static::tryExplodeName($name);
 
-        $result = static::searchArrayWithNameArray($arr, $name);
+        $result = static::searchArrayWithNameArray($arr, $nameArr);
 
         if ($getFormDefault && $result === null && static::$localeDefault != static::$locale) {
-            $name[0] = static::$localeDefault;
-            $result = static::searchArrayWithNameArray($arr, $name);
+            $nameArr[0] = static::$localeDefault;
+            $result = static::searchArrayWithNameArray($arr, $nameArr);
         }
 
         return static::getFromString(is_string($result)?$result:$default, $params);
@@ -135,8 +127,8 @@ class Lang
     }
 
     /**
-     * @param $name
-     * @return array|string
+     * @param array|string $name
+     * @return array
      */
     protected static function tryExplodeName($name)
     {
@@ -161,6 +153,29 @@ class Lang
         }
 
         return $result;
+    }
+
+    /**
+     * @param array $nameArr
+     * @param array $params
+     * @param null $default
+     * @param bool $getFormDefault
+     * @return mixed|null
+     */
+    protected static function searchFormArrayLangOrFile(
+        array $nameArr,
+        array $params = [],
+        $default = null,
+        $getFormDefault = false
+    ) {
+        if (null !== $return = static::getFromArray(static::$lang, $nameArr, $params, $default, $getFormDefault)) {
+            return $return;
+        }
+        if (null !== $return = static::getFromFile($nameArr, $params, $default, $getFormDefault)) {
+            return $return;
+        }
+
+        return $default;
     }
 
     /**
