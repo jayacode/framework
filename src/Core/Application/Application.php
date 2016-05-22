@@ -8,7 +8,6 @@ use JayaCode\Framework\Core\Http\Response;
 use JayaCode\Framework\Core\Route\Dispatcher\Dispatcher as DispatcherRoute;
 use JayaCode\Framework\Core\Route\Status;
 use JayaCode\Framework\Core\Session\Session;
-use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
 
 /**
  * Class Application
@@ -16,10 +15,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\SessionStorageInterface;
  */
 class Application
 {
-    /**
-     * @var Application
-     */
-    public static $app;
 
     /**
      * @var Request
@@ -48,42 +43,28 @@ class Application
 
     /**
      * Application constructor.
-     * @param SessionStorageInterface $storage
+     * @param Request $request
+     * @param Response $response
+     * @param Session $session
+     * @param DispatcherRoute $routeDispatcher
      */
-    public function __construct(SessionStorageInterface $storage = null)
-    {
-        $this->initialize($storage);
-    }
+    public function __construct(
+        Request $request,
+        Response $response,
+        Session $session,
+        DispatcherRoute $routeDispatcher
+    ) {
 
-    /**
-     * Create Application object from static function
-     * @param SessionStorageInterface $storage
-     * @return Application
-     */
-    public static function create(SessionStorageInterface $storage = null)
-    {
-        return new static($storage);
-    }
+        $this->request = $request;
+        $this->response = $response;
+        $this->session = $session;
+        $this->routeDispatcher = $routeDispatcher;
 
-    /**
-     * initialize Application
-     * @param SessionStorageInterface $storage
-     */
-    public function initialize(SessionStorageInterface $storage = null)
-    {
-        $this->session = new Session($storage);
         if (!$this->session->isStarted()) {
             $this->session->start();
         }
 
-        $this->request = Request::createFromSymfonyGlobal($this->session);
-
-        $this->response = Response::create();
-
-        static::$app = $this;
-
         $this->setTimeZone();
-
         $this->initDatabase();
     }
 
@@ -149,46 +130,6 @@ class Application
         $this->response->send();
 
         $this->terminate();
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getRequest()
-    {
-        return $this->request;
-    }
-
-    /**
-     * @param mixed $request
-     */
-    public function setRequest($request)
-    {
-        $this->request = $request;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getResponse()
-    {
-        return $this->response;
-    }
-
-    /**
-     * @param mixed $response
-     */
-    public function setResponse($response)
-    {
-        $this->response = $response;
-    }
-
-    /**
-     * @param callable $definitionCollection
-     */
-    public function setDataRoute($definitionCollection)
-    {
-        $this->routeDispatcher = \JayaCode\Framework\Core\Route\dispatcherBasic($definitionCollection);
     }
 
     /**

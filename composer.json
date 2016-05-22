@@ -17,7 +17,8 @@
     "require": {
         "php": ">=5.5.0",
         "danielstjules/stringy": "2.3.*",
-        "symfony/http-foundation": "3.0.*"
+        "symfony/http-foundation": "3.0.*",
+        "php-di/php-di": "^5.2"
     },
     "replace": {
       "illuminate/database": "self.version"
