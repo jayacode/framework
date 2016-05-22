@@ -47,7 +47,8 @@ class BasicTemplate extends Template
         ob_end_clean();
         
         if ($this->parent) {
-            $fileParent = $this->parent.Template::$extension;
+            $fileParent = str_replace(".", "/", $this->parent);
+            $fileParent = $fileParent.Template::$extension;
             $parent = new BasicTemplate($this->locView, $fileParent, $this->variableCollector, $this->converter);
             $parent->setContentParent($this->contentParent);
             return $parent->render();
