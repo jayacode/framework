@@ -10,7 +10,7 @@ class Config
     /**
      * @var string
      */
-    public static $configDir;
+    public static $configDir = null;
     /**
      * @var array
      */
