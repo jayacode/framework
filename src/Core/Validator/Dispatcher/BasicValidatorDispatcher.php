@@ -20,24 +20,55 @@ class BasicValidatorDispatcher extends ValidatorDispatcher
 
         $isValid = true;
         foreach ($this->rules as $nameData => $rules) {
-            foreach ($rules as $rule) {
-                /** @var Rule $rule */
-                $rule->setData(arr_get($data, $nameData));
-                if (!$rule->isValid()) {
-                    foreach ($rule->getErrorMessage() as $message) {
-                        if (!isset($this->errorMessage[$nameData])) {
-                            $this->errorMessage[$nameData] = [];
-                        }
-                        array_push($this->errorMessage[$nameData], $message);
-                    }
-
-                    $isValid = $isValid?false:$isValid;
-                }
-            }
+            $this->rulesCheckValid($rules, $data, $nameData, $isValid);
         }
 
         return $isValid;
     }
+
+    /**
+     * @param array $rules
+     * @param $data
+     * @param $nameData
+     * @param $isValid
+     */
+    protected function rulesCheckValid(array $rules, $data, $nameData, &$isValid)
+    {
+        foreach ($rules as $rule) {
+            /** @var Rule $rule */
+            $this->ruleCheckValid($rule, $data, $nameData, $isValid);
+        }
+    }
+
+    /**
+     * @param Rule $rule
+     * @param $data
+     * @param $nameData
+     * @param $isValid
+     */
+    protected function ruleCheckValid(Rule $rule, $data, $nameData, &$isValid)
+    {
+        $rule->setData(arr_get($data, $nameData));
+        if (!$rule->isValid()) {
+            $this->initRuleErrorMessage($rule->getErrorMessage(), $nameData);
+            $isValid = $isValid?false:$isValid;
+        }
+    }
+
+    /**
+     * @param $messages
+     * @param $nameData
+     */
+    protected function initRuleErrorMessage($messages, $nameData)
+    {
+        foreach ($messages as $message) {
+            if (!isset($this->errorMessage[$nameData])) {
+                $this->errorMessage[$nameData] = [];
+            }
+            array_push($this->errorMessage[$nameData], $message);
+        }
+    }
+
 
     /**
      * @param array $rules
