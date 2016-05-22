@@ -44,6 +44,7 @@
         "files": [
           "src/Core/View/functions.php",
           "src/Core/Route/functions.php",
+          "src/Core/Validator/functions.php",
           "src/Core/Helper/helper_function.php"
         ]
     },

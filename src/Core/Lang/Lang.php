@@ -57,17 +57,17 @@ class Lang
     {
         $nameArr = static::tryExplodeName($name);
 
-        if (null !== $return = static::searchFormArrayLangOrFile($nameArr, $params, null, false)) {
+        if (null !== $return = static::searchFormArrayLangOrFile($nameArr, $params)) {
             return $return;
         }
 
         $nameArrDef = $nameArr;
         $nameArrDef[0] = static::$localeDefault;
-        if (null !== $return = static::searchFormArrayLangOrFile($nameArrDef, $params, null, false)) {
+        if (null !== $return = static::searchFormArrayLangOrFile($nameArrDef, $params)) {
             return $return;
         }
 
-        return $default;
+        return is_string($default)?static::getFromString($default, $params):$default;
     }
 
     /**
@@ -120,7 +120,7 @@ class Lang
         }
 
         foreach ($params as $key => $value) {
-            $string = str_replace("{" . $key . "}", $value, $string);
+            $string = str_replace("{" . $key . "}", htmlspecialchars($value), $string);
         }
 
         return $string;
