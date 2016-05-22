@@ -13,7 +13,7 @@ use JayaCode\Framework\Core\Validator;
 require_once "vendor/autoload.php";
 
 $validator = Validator\create([
-    'id'   => 'required|regex:/[\d]+/',
+    'id'   => 'required|regex:[\d]+',
     'firstName' => 'required|name:First Name'
 ]);
 
